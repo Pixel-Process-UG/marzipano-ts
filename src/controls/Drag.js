@@ -193,6 +193,4 @@ class DragControlMethod {
 
 eventEmitter(DragControlMethod);
 
-const tmpReleaseFriction = [null, null];
-
 export default DragControlMethod;
