@@ -12,13 +12,27 @@ Please report bugs using the [issue tracker](https://github.com/google/marzipano
 
 ### User guide
 
-You can include Marzipano in your project in two different ways:
+You can include Marzipano in your project in several ways:
 
 * Obtain the `marzipano.js` file from the latest release at
   http://www.marzipano.net and copy them into your project.
 
-* Install Marzipano as a dependency using the `npm` package manager and
-  `require` it as a module.
+* Install Marzipano as a dependency using the `npm` package manager:
+  ```bash
+  npm install marzipano
+  ```
+
+* **ES Modules (Recommended):**
+  ```javascript
+  import { Viewer, Scene, ImageUrlSource, RectilinearView, CubeGeometry } from 'marzipano';
+  ```
+
+* **CommonJS (Legacy):**
+  ```javascript
+  const { Viewer, Scene, ImageUrlSource, RectilinearView, CubeGeometry } = require('marzipano');
+  ```
+
+**Note:** As of version 0.10.2+, Marzipano uses ES6 modules. See [MIGRATION.md](./MIGRATION.md) for migration guidance from older versions.
 
 ### Developer guide
 
@@ -33,16 +47,27 @@ use [nvm](https://github.com/creationix/nvm) instead.
 Run `npm install` to install the dependencies. If you haven't in a while,
 bring them up to date with `npm update`.
 
-Run `npm run dev` to serve this directory at `http://localhost:8080`.
-While this script is running, the demos are live-reloaded whenever the source
-files are edited.
+**Development:**
+```bash
+npm run dev          # Start Vite dev server with HMR at http://localhost:5173
+npm run test:watch   # Run tests in watch mode with Vitest
+npm run test:ui      # Run tests with Vitest UI
+```
 
-Run `npm test` to automatically run the browser-based test suite on all
-available browsers in your system.
+**Testing:**
+```bash
+npm test             # Run all tests with Vitest
+npm run coverage     # Generate test coverage report
+```
 
-Run `npm run livetest` to serve the browser-based test suite at `http://localhost:7357`.
-While this script is running, the test suite is live-reloaded whenever the
-source or test files are edited.
+**Legacy Commands (still available):**
+```bash
+npm run dev:old      # Legacy dev server (Browserify)
+npm run test:old     # Legacy test runner (Testem)
+npm run livetest:old # Legacy live test server
+```
+
+The modern build system uses Vite for faster development and ES module support. Tests use Vitest with a Mocha-compatible API.
 
 ### Maintainer guide
 

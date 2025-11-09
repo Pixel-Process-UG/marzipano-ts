@@ -16,7 +16,7 @@
 
 import StaticAsset from '../assets/Static.js';
 import NetworkError from '../NetworkError.js';
-import browser from 'bowser';
+import { parse } from 'bowser';
 import global from '../util/global.js';
 import once from '../util/once.js';
 
@@ -24,7 +24,9 @@ import once from '../util/once.js';
 
 // Whether to use createImageBitmap instead of a canvas for cropping.
 // See https://caniuse.com/?search=createimagebitmap
-const useCreateImageBitmap = !!global.createImageBitmap && !browser.firefox && !browser.safari;
+const browserParser = typeof navigator !== 'undefined' ? parse(navigator.userAgent) : null;
+const browserName = browserParser?.browser.name || '';
+const useCreateImageBitmap = !!global.createImageBitmap && browserName !== 'Firefox' && browserName !== 'Safari';
 
 // Options for createImageBitmap.
 const createImageBitmapOpts = {

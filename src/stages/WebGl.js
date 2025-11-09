@@ -16,7 +16,7 @@
 
 import Stage from './Stage.js';
 import HtmlImageLoader from '../loaders/HtmlImage.js';
-import browser from 'bowser';
+import { parse } from 'bowser';
 import pixelRatio from '../util/pixelRatio.js';
 import ispot from '../util/ispot.js';
 import clearOwnProperties from '../util/clearOwnProperties.js';
@@ -27,12 +27,13 @@ import { setFullSize } from '../util/dom.js';
 // TODO(tjgq): Unify Stage and WebGlStage.
 
 // Browser-specific workarounds.
+const browserParser = typeof navigator !== 'undefined' ? parse(navigator.userAgent) : null;
 const browserQuirks = {
   // Whether to use texImage2D instead of texSubImage2D when repainting an
   // existing texture from a video element. On most browsers texSubImage2D is
   // faster, but on Chrome the performance degrades significantly. See:
   // https://bugs.chromium.org/p/chromium/issues/detail?id=612542
-  videoUseTexImage2D: browser.chrome,
+  videoUseTexImage2D: browserParser?.browser.name === 'Chrome',
 };
 
 function initWebGlContext(canvas, opts) {

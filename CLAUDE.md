@@ -7,9 +7,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Marzipano is a 360° media viewer for the modern web. It's a JavaScript library that uses WebGL to render panoramic images with support for multiple geometries (Cube, Equirect, Flat) and projection types.
 
 **Key Technologies:**
-- CommonJS modules (Browserify for bundling)
+- ES6 modules (ESM) with native import/export
+- Vite for development and building
+- Vitest for testing (Mocha-compatible API)
 - WebGL for rendering
-- Mocha/Chai/Sinon for testing
 - JSDoc for documentation
 - Hammer.js for touch gestures
 - gl-matrix for 3D math
@@ -24,34 +25,40 @@ npm update                     # Update dependencies
 
 ### Development
 ```bash
-npm run dev                    # Start dev server at http://localhost:8080 with live reload
-npm run livetest               # Run test suite with live reload at http://localhost:7357
+npm run dev                    # Start Vite dev server with HMR (Hot Module Replacement)
+npm run test:watch             # Run test suite in watch mode with Vitest
+npm run test:ui                # Run tests with Vitest UI
 ```
 
 ### Testing
 ```bash
-npm test                       # Run all tests in available browsers (uses testem)
+npm test                       # Run all tests with Vitest
+npm run test:watch             # Run tests in watch mode
+npm run test:ui                # Run tests with Vitest UI
+npm run coverage               # Generate test coverage report
 ```
 
 **Test Architecture:**
 - Test files in `test/suite/` mirror source structure
-- Tests use Mocha + Chai + Sinon
-- Browserify bundles tests before execution (see `testem.json`)
-- Tests automatically run on file changes during `npm run livetest`
+- Tests use Vitest (Mocha-compatible API) + Chai + Sinon
+- Tests run in jsdom environment by default
+- Tests use ES6 modules (import/export)
+- `test/wait.js` provides async test helpers
 
 ### Building & Release
 ```bash
-npm run release                # Build production bundle (browserify + uglify)
+npm run build                  # Build production bundle with Vite
+npm run preview                # Preview production build
+npm run release                # Build production bundle (legacy script)
 npm run deploy                 # Deploy to website
 npm publish                    # Publish to npm registry
 ```
 
-**Build Process (`scripts/release`):**
-1. Browserifies `src/index.js` into standalone bundle
-2. Uglifies with compression and mangling
-3. Prepends version-specific preamble
-4. Generates JSDoc documentation
-5. Creates versioned zip file in `dist/`
+**Build Process:**
+- Vite builds ES modules for modern browsers
+- Production builds are optimized and minified
+- Legacy `scripts/release` still available for backward compatibility
+- JSDoc documentation can be generated separately
 
 ## Core Architecture
 
@@ -135,17 +142,19 @@ Viewer (top-level API)
 
 ### Module System
 
-- Entry point: `src/index.js` exports public API via CommonJS
+- Entry point: `src/index.js` exports public API via ES6 modules
+- All source files use ES6 `import`/`export` syntax
 - All dependencies exposed via `Marzipano.dependencies.*`
 - Utilities in `src/util/` (async, geometry math, DOM helpers, etc.)
 - Collections in `src/collections/` (Map, Set, LruSet, LruMap)
+- Package.json has `"type": "module"` for native ESM support
 
 ## Code Patterns
 
 ### Event Emitters
 Most core classes use `minimal-event-emitter` for events:
 ```javascript
-var eventEmitter = require('minimal-event-emitter');
+import eventEmitter from 'minimal-event-emitter';
 eventEmitter(Constructor);
 // Then: instance.addEventListener(), instance.emit()
 ```
@@ -175,8 +184,10 @@ Tiles identified by face (cube), level, x, y coordinates. Each geometry implemen
 ## Testing Notes
 
 - Test files mirror source structure in `test/suite/`
-- Use `describe()` and `it()` (Mocha style)
-- Assertions with Chai's `expect()`
+- Use `describe()` and `it()` (Vitest/Mocha-compatible API)
+- Tests use ES6 modules (`import`/`export`)
+- Assertions with Chai's `assert` or `expect()`
 - Stubs/spies with Sinon when needed
-- Browser-based tests (not Node.js)
+- Tests run in jsdom environment by default
 - `test/wait.js` provides async test helpers
+- Vitest configuration in `vitest.config.js`

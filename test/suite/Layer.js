@@ -112,12 +112,12 @@ describe('Layer', function () {
     geometry.levelTiles.returns(tileList);
     layer.pinLevel(1);
     assert.isTrue(geometry.levelTiles.withArgs(levelList[1]).calledOnce);
-    for (var i = 0; i < tileList.length; i++) {
+    for (let i = 0; i < tileList.length; i++) {
       assert.isTrue(textureStore.pin.calledWithExactly(tileList[i]));
     }
     layer.unpinLevel(1);
     assert.isTrue(geometry.levelTiles.withArgs(levelList[1]).calledTwice);
-    for (var i = 0; i < tileList.length; i++) {
+    for (let i = 0; i < tileList.length; i++) {
       assert.isTrue(textureStore.unpin.calledWithExactly(tileList[i]));
     }
   });
@@ -127,12 +127,12 @@ describe('Layer', function () {
     geometry.levelTiles.returns(tileList);
     layer.pinFirstLevel();
     assert.isTrue(geometry.levelTiles.withArgs(levelList[0]).calledOnce);
-    for (var i = 0; i < tileList.length; i++) {
+    for (let i = 0; i < tileList.length; i++) {
       assert.isTrue(textureStore.pin.calledWithExactly(tileList[i]));
     }
     layer.unpinLevel(1);
     assert.isTrue(geometry.levelTiles.withArgs(levelList[0]).calledTwice);
-    for (var i = 0; i < tileList.length; i++) {
+    for (let i = 0; i < tileList.length; i++) {
       assert.isTrue(textureStore.unpin.calledWithExactly(tileList[i]));
     }
   });

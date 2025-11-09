@@ -135,7 +135,7 @@ export const util = {
 };
 
 // Expose dependencies for clients to use
-import bowser from 'bowser';
+import * as bowser from 'bowser';
 import * as glMatrix from 'gl-matrix';
 import eventEmitter from 'minimal-event-emitter';
 import hammerjs from 'hammerjs';

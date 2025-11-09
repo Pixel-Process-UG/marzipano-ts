@@ -30,8 +30,8 @@ const EquirectTile = EquirectGeometry.Tile;
 // Stage is an abstract class and cannot be instantiated directly.
 // We must stub methods and properties expected to be implemented by subclasses.
 function TestStage(progressive) {
-  var renderers = [].slice.call(arguments, 1);
-  var nextRendererIndex = 0;
+  const renderers = [].slice.call(arguments, 1);
+  let nextRendererIndex = 0;
   this.constructor.super_.call(this, { progressive: progressive });
   this.validateLayer = sinon.stub();
   this.setSizeForType = sinon.stub();
