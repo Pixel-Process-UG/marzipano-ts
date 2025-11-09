@@ -3,7 +3,6 @@
 .tmp
 .DS_Store
 npm-debug.log
-package-lock.json
 /node_modules/*
 /tmp/*
 /build/*
