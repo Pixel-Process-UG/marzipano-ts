@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
 
-var assert = require('chai').assert;
-
-var decimal = require('../../../src/util/decimal');
+import decimal from '../../../src/util/decimal.js';
 
 var tab = [
   [0, '0.00000000000000'],
@@ -26,8 +24,8 @@ var tab = [
   [0.123456789012345, '0.123456789012345'],
 ];
 
-suite('decimal', function () {
-  test('decimal', function () {
+describe('decimal', function () {
+  it('decimal', function () {
     for (var i = 0; i < tab.length; i++) {
       var a = tab[i][0],
         b = tab[i][1];

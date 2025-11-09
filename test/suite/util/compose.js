@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
 
-var assert = require('chai').assert;
-
-var compose = require('../../../src/util/compose');
+import compose from '../../../src/util/compose.js';
 
 function twice(x) {
   return 2 * x;
@@ -27,18 +25,18 @@ function square(x) {
   return x * x;
 }
 
-suite('compose', function () {
-  test('zero', function () {
+describe('compose', function () {
+  it('zero', function () {
     var fn = compose();
     assert.strictEqual(fn(42), 42);
   });
 
-  test('one', function () {
+  it('one', function () {
     var fn = compose(twice);
     assert.strictEqual(fn(42), 84);
   });
 
-  test('two', function () {
+  it('two', function () {
     var fn = compose(twice, square);
     assert.strictEqual(fn(4), 64);
   });

@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
+import sinon from 'sinon';
+import wait from '../../wait.js';
 
-var assert = require('chai').assert;
-var sinon = require('sinon');
-var wait = require('../../wait');
-
-var delay = require('../../../src/util/delay');
+import delay from '../../../src/util/delay.js';
 
 var error = new Error('err');
 
-suite('delay', function () {
-  test('cancel', function () {
+describe('delay', function () {
+  it('cancel', function () {
     var spy = sinon.spy();
     var cancel = delay(4, spy);
     cancel(error);
@@ -34,7 +32,7 @@ suite('delay', function () {
     });
   });
 
-  test('no cancel', function () {
+  it('no cancel', function () {
     var spy = sinon.spy();
     delay(4, spy);
     wait.untilSpyCalled(spy, function () {

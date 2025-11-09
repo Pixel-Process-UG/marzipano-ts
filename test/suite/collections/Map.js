@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
 
-var assert = require('chai').assert;
-
-var Map = require('../../../src/collections/Map');
+import Map from '../../../src/collections/Map.js';
 
 function Key(key) {
   this._key = key;
@@ -32,9 +30,9 @@ Key.prototype.equals = function (that) {
   return this._key === that._key;
 };
 
-suite('Map', function () {
-  suite('set', function () {
-    test('nonexisting key', function () {
+describe('Map', function () {
+  describe('set', function () {
+    it('nonexisting key', function () {
       var map = new Map();
       var key1 = new Key(1);
       var key2 = new Key(1);
@@ -44,7 +42,7 @@ suite('Map', function () {
       assert.strictEqual(map.size(), 1);
     });
 
-    test('existing key', function () {
+    it('existing key', function () {
       var map = new Map();
       var key1 = new Key(1);
       var key2 = new Key(1);
@@ -55,7 +53,7 @@ suite('Map', function () {
       assert.strictEqual(map.size(), 1);
     });
 
-    test('nonexisting key with same hash as existing key', function () {
+    it('nonexisting key with same hash as existing key', function () {
       var map = new Map();
       var key1 = new Key(1);
       var key2 = new Key(-1);
@@ -68,7 +66,7 @@ suite('Map', function () {
       assert.strictEqual(map.size(), 2);
     });
 
-    test('nonexisting key with different hash than existing key', function () {
+    it('nonexisting key with different hash than existing key', function () {
       var map = new Map();
       var key1 = new Key(1);
       var key2 = new Key(2);
@@ -82,14 +80,14 @@ suite('Map', function () {
     });
   });
 
-  suite('get', function () {
-    test('nonexisting key', function () {
+  describe('get', function () {
+    it('nonexisting key', function () {
       var map = new Map();
       var key = new Key(1);
       assert.isNull(map.get(key));
     });
 
-    test('nonexisting key with same hash as existing key', function () {
+    it('nonexisting key with same hash as existing key', function () {
       var map = new Map();
       var key1 = new Key(1);
       var key2 = new Key(2);
@@ -98,14 +96,14 @@ suite('Map', function () {
     });
   });
 
-  suite('has', function () {
-    test('nonexisting key', function () {
+  describe('has', function () {
+    it('nonexisting key', function () {
       var map = new Map();
       var key = new Key(1);
       assert.isFalse(map.has(key));
     });
 
-    test('nonexisting key with same hash as existing key', function () {
+    it('nonexisting key with same hash as existing key', function () {
       var map = new Map();
       var key1 = new Key(1);
       var key2 = new Key(-1);
@@ -114,8 +112,8 @@ suite('Map', function () {
     });
   });
 
-  suite('del', function () {
-    test('existing key', function () {
+  describe('del', function () {
+    it('existing key', function () {
       var map = new Map();
       var key1 = new Key(1);
       var key2 = new Key(1);
@@ -125,7 +123,7 @@ suite('Map', function () {
       assert.strictEqual(map.size(), 0);
     });
 
-    test('nonexisting key', function () {
+    it('nonexisting key', function () {
       var map = new Map();
       var key1 = new Key(1);
       var key2 = new Key(2);
@@ -135,7 +133,7 @@ suite('Map', function () {
       assert.strictEqual(map.size(), 1);
     });
 
-    test('existing key with same hash as existing key', function () {
+    it('existing key with same hash as existing key', function () {
       var map = new Map();
       var key1 = new Key(1);
       var key2 = new Key(-1);
@@ -148,7 +146,7 @@ suite('Map', function () {
       assert.strictEqual(map.size(), 1);
     });
 
-    test('nonexisting key with same hash as existing key', function () {
+    it('nonexisting key with same hash as existing key', function () {
       var map = new Map();
       var key1 = new Key(1);
       var key2 = new Key(-1);
@@ -160,13 +158,13 @@ suite('Map', function () {
     });
   });
 
-  suite('size', function () {
-    test('empty', function () {
+  describe('size', function () {
+    it('empty', function () {
       var map = new Map();
       assert.strictEqual(map.size(), 0);
     });
 
-    test('more elements than buckets', function () {
+    it('more elements than buckets', function () {
       var map = new Map(16);
       for (var i = 0; i < 32; i++) {
         map.set(new Key(i), i);
@@ -175,8 +173,8 @@ suite('Map', function () {
     });
   });
 
-  suite('clear', function () {
-    test('clear', function () {
+  describe('clear', function () {
+    it('clear', function () {
       var map = new Map();
       for (var i = 0; i < 10; i++) {
         map.set(new Key(i), 2 * i);
@@ -189,8 +187,8 @@ suite('Map', function () {
     });
   });
 
-  suite('forEach', function () {
-    test('empty', function () {
+  describe('forEach', function () {
+    it('empty', function () {
       var map = new Map();
       assert.strictEqual(
         map.forEach(function () {
@@ -200,7 +198,7 @@ suite('Map', function () {
       );
     });
 
-    test('nonempty', function () {
+    it('nonempty', function () {
       var map = new Map();
       var keys = [];
       var values = [];

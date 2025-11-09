@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
-
-var assert = require('chai').assert;
-var sinon = require('sinon');
+import { assert } from 'chai';
+import sinon from 'sinon';
 sinon.assert.expose(assert, { prefix: '' });
 
-var eventEmitter = require('minimal-event-emitter');
-var inherits = require('../../src/util/inherits');
+import eventEmitter from 'minimal-event-emitter';
+import inherits from '../../src/util/inherits.js';
 
-var Stage = require('../../src/stages/Stage');
+import Stage from '../../src/stages/Stage.js';
 
-var CubeGeometry = require('../../src/geometries/Cube');
-var CubeTile = CubeGeometry.Tile;
-var EquirectGeometry = require('../../src/geometries/Equirect');
-var EquirectTile = EquirectGeometry.Tile;
+import CubeGeometry from '../../src/geometries/Cube.js';
+const CubeTile = CubeGeometry.Tile;
+import EquirectGeometry from '../../src/geometries/Equirect.js';
+const EquirectTile = EquirectGeometry.Tile;
 
 // Stage is an abstract class and cannot be instantiated directly.
 // We must stub methods and properties expected to be implemented by subclasses.
@@ -83,8 +81,8 @@ function MockTextureStore() {
   this.endFrame = sinon.stub();
 }
 
-suite('Stage', function () {
-  test('manages the layer stack correctly', function () {
+describe('Stage', function () {
+  it('manages the layer stack correctly', function () {
     var stage = new TestStage();
 
     var layer1 = new MockLayer();
@@ -142,7 +140,7 @@ suite('Stage', function () {
     assert.sameOrderedMembers([layer3], stage.listLayers());
   });
 
-  test('throws if layer validation fails', function () {
+  it('throws if layer validation fails', function () {
     var stage = new TestStage();
     var layer = new MockLayer();
 
@@ -152,7 +150,7 @@ suite('Stage', function () {
     });
   });
 
-  test('emits invalidation event', function () {
+  it('emits invalidation event', function () {
     var stage = new TestStage();
     var layer = new MockLayer();
 
@@ -181,7 +179,7 @@ suite('Stage', function () {
     assert.equal(spy.callCount, 7);
   });
 
-  test('gets and sets size', function () {
+  it('gets and sets size', function () {
     var stage = new TestStage();
 
     var size = {};
@@ -198,8 +196,8 @@ suite('Stage', function () {
     assert.equal(size.height, 100);
   });
 
-  suite('general rendering', function () {
-    test('renders a single layer', function () {
+  describe('general rendering', function () {
+    it('renders a single layer', function () {
       var renderer = new MockRenderer();
       var stage = new TestStage(false, renderer);
 
@@ -232,7 +230,7 @@ suite('Stage', function () {
       assert.callOrder(store.startFrame, store.markTile, store.endFrame);
     });
 
-    test('renders multiple layers', function () {
+    it('renders multiple layers', function () {
       var renderer1 = new MockRenderer();
       var renderer2 = new MockRenderer();
       var stage = new TestStage(false, renderer1, renderer2);
@@ -293,7 +291,7 @@ suite('Stage', function () {
       assert.callOrder(store2.startFrame, store2.markTile, store2.endFrame);
     });
 
-    test('renders multiple layers with the same renderer', function () {
+    it('renders multiple layers with the same renderer', function () {
       var renderer = new MockRenderer();
       var stage = new TestStage(false, renderer, renderer);
 
@@ -346,7 +344,7 @@ suite('Stage', function () {
       assert.callOrder(store2.startFrame, store2.markTile, store2.endFrame);
     });
 
-    test('renders multiple layers with the same texture store', function () {
+    it('renders multiple layers with the same texture store', function () {
       var renderer1 = new MockRenderer();
       var renderer2 = new MockRenderer();
       var stage = new TestStage(false, renderer1, renderer2);
@@ -383,8 +381,8 @@ suite('Stage', function () {
     });
   });
 
-  suite('non-progressive rendering', function () {
-    test('falls back to a parent tile', function () {
+  describe('non-progressive rendering', function () {
+    it('falls back to a parent tile', function () {
       var renderer = new MockRenderer();
       var stage = new TestStage(false, renderer);
 
@@ -415,7 +413,7 @@ suite('Stage', function () {
       assert.calledWith(store.markTile, parentTile);
     });
 
-    test('falls back to a grandparent tile', function () {
+    it('falls back to a grandparent tile', function () {
       var renderer = new MockRenderer();
       var stage = new TestStage(false, renderer);
 
@@ -446,7 +444,7 @@ suite('Stage', function () {
       assert.calledWith(store.markTile, grandparentTile);
     });
 
-    test('falls back to children tiles', function () {
+    it('falls back to children tiles', function () {
       var renderer = new MockRenderer();
       var stage = new TestStage(false, renderer);
 
@@ -497,7 +495,7 @@ suite('Stage', function () {
       assert.calledWith(store.markTile, childTile4);
     });
 
-    test('falls back to both children and parent tiles', function () {
+    it('falls back to both children and parent tiles', function () {
       var renderer = new MockRenderer();
       var stage = new TestStage(false, renderer);
 
@@ -545,7 +543,7 @@ suite('Stage', function () {
       assert.calledWith(store.markTile, parentTile);
     });
 
-    test('falls back to grandchildren tiles on trivial geometries', function () {
+    it('falls back to grandchildren tiles on trivial geometries', function () {
       var renderer = new MockRenderer();
       var stage = new TestStage(false, renderer);
 
@@ -571,7 +569,7 @@ suite('Stage', function () {
       assert.calledWith(store.markTile, grandchildTile);
     });
 
-    test('does not fall back to grandchildren tiles on nontrivial geometries', function () {
+    it('does not fall back to grandchildren tiles on nontrivial geometries', function () {
       var renderer = new MockRenderer();
       var stage = new TestStage(false, renderer);
 
@@ -608,7 +606,7 @@ suite('Stage', function () {
       assert.calledWith(store.markTile, parentTile);
     });
 
-    test('does not render a fallback tile more than once', function () {
+    it('does not render a fallback tile more than once', function () {
       var renderer = new MockRenderer();
       var stage = new TestStage(false, renderer);
 
@@ -641,7 +639,7 @@ suite('Stage', function () {
       assert.calledWith(store.markTile, parentTile);
     });
 
-    test('does not fall back when unnecessary', function () {
+    it('does not fall back when unnecessary', function () {
       var renderer = new MockRenderer();
       var stage = new TestStage(false, renderer);
 
@@ -678,7 +676,7 @@ suite('Stage', function () {
       assert.calledWith(store.markTile, visibleTile);
     });
 
-    test('renders and loads tiles in the right order', function () {
+    it('renders and loads tiles in the right order', function () {
       var renderer = new MockRenderer();
       var stage = new TestStage(false, renderer);
 
@@ -734,8 +732,8 @@ suite('Stage', function () {
     });
   });
 
-  suite('progressive rendering', function () {
-    test('falls back to a parent tile', function () {
+  describe('progressive rendering', function () {
+    it('falls back to a parent tile', function () {
       var renderer = new MockRenderer();
       var stage = new TestStage(true, renderer);
 
@@ -767,7 +765,7 @@ suite('Stage', function () {
       assert.calledWith(store.markTile, grandparentTile);
     });
 
-    test('falls back to a grandparent tile', function () {
+    it('falls back to a grandparent tile', function () {
       var renderer = new MockRenderer();
       var stage = new TestStage(true, renderer);
 
@@ -799,7 +797,7 @@ suite('Stage', function () {
       assert.calledWith(store.markTile, grandparentTile);
     });
 
-    test('falls back to children tiles', function () {
+    it('falls back to children tiles', function () {
       var renderer = new MockRenderer();
       var stage = new TestStage(true, renderer);
 
@@ -851,7 +849,7 @@ suite('Stage', function () {
       assert.calledWith(store.markTile, childTile4);
     });
 
-    test('falls back to both children and parent tiles', function () {
+    it('falls back to both children and parent tiles', function () {
       var renderer = new MockRenderer();
       var stage = new TestStage(true, renderer);
 
@@ -899,7 +897,7 @@ suite('Stage', function () {
       assert.calledWith(store.markTile, parentTile);
     });
 
-    test('falls back to grandchildren tiles on trivial geometries', function () {
+    it('falls back to grandchildren tiles on trivial geometries', function () {
       var renderer = new MockRenderer();
       var stage = new TestStage(true, renderer);
 
@@ -925,7 +923,7 @@ suite('Stage', function () {
       assert.calledWith(store.markTile, grandchildTile);
     });
 
-    test('does not fall back to grandchildren tiles on nontrivial geometries', function () {
+    it('does not fall back to grandchildren tiles on nontrivial geometries', function () {
       var renderer = new MockRenderer();
       var stage = new TestStage(true, renderer);
 
@@ -962,7 +960,7 @@ suite('Stage', function () {
       assert.calledWith(store.markTile, parentTile);
     });
 
-    test('does not render a fallback tile more than once', function () {
+    it('does not render a fallback tile more than once', function () {
       var renderer = new MockRenderer();
       var stage = new TestStage(true, renderer);
 
@@ -996,7 +994,7 @@ suite('Stage', function () {
       assert.calledWith(store.markTile, grandparentTile);
     });
 
-    test('does not fall back when unnecessary', function () {
+    it('does not fall back when unnecessary', function () {
       var renderer = new MockRenderer();
       var stage = new TestStage(true, renderer);
 
@@ -1034,7 +1032,7 @@ suite('Stage', function () {
       assert.calledWith(store.markTile, parentTile);
     });
 
-    test('renders and loads tiles in the right order', function () {
+    it('renders and loads tiles in the right order', function () {
       var renderer = new MockRenderer();
       var stage = new TestStage(true, renderer);
 

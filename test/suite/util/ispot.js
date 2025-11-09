@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
 
-var assert = require('chai').assert;
+import ispot from '../../../src/util/ispot.js';
 
-var ispot = require('../../../src/util/ispot');
-
-suite('ispot', function () {
-  test('ispot', function () {
+describe('ispot', function () {
+  it('ispot', function () {
     var powersOfTwo = [0, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024];
     for (var i = 0; i < powersOfTwo.length; i++) {
       assert.isTrue(ispot(powersOfTwo[i]));

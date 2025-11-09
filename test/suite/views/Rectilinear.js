@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
 
-var assert = require('chai').assert;
-
-var RectilinearView = require('../../../src/views/Rectilinear');
-var CubeGeometry = require('../../../src/geometries/Cube');
+import RectilinearView from '../../../src/views/Rectilinear.js';
+import CubeGeometry from '../../../src/geometries/Cube.js';
 var mat4 = require('gl-matrix').mat4;
 var htov = require('../../../src/util/convertFov').htov;
-var pixelRatio = require('../../../src/util/pixelRatio');
+import pixelRatio from '../../../src/util/pixelRatio.js';
 
-suite('RectilinearView', function () {
-  suite('constructor', function () {
-    test('sets default parameters', function () {
+describe('RectilinearView', function () {
+  describe('constructor', function () {
+    it('sets default parameters', function () {
       var view = new RectilinearView();
       assert.strictEqual(view.yaw(), 0.0);
       assert.strictEqual(view.pitch(), 0.0);
@@ -33,26 +31,26 @@ suite('RectilinearView', function () {
     });
   });
 
-  suite('getters/setters', function () {
-    test('yaw', function () {
+  describe('getters/setters', function () {
+    it('yaw', function () {
       var view = new RectilinearView();
       view.setYaw(1.234);
       assert.strictEqual(view.yaw(), 1.234);
     });
 
-    test('pitch', function () {
+    it('pitch', function () {
       var view = new RectilinearView();
       view.setPitch(1.234);
       assert.strictEqual(view.pitch(), 1.234);
     });
 
-    test('fov', function () {
+    it('fov', function () {
       var view = new RectilinearView();
       view.setFov(1.234);
       assert.strictEqual(view.fov(), 1.234);
     });
 
-    test('size', function () {
+    it('size', function () {
       var view = new RectilinearView();
       view.setSize({ width: 123, height: 456 });
       var obj = {};
@@ -65,8 +63,8 @@ suite('RectilinearView', function () {
     });
   });
 
-  suite('parameter normalization', function () {
-    test('yaw', function () {
+  describe('parameter normalization', function () {
+    it('yaw', function () {
       var view = new RectilinearView();
       view.setYaw(Math.PI + 0.01);
       assert.strictEqual(view.yaw(), -Math.PI + 0.01);
@@ -74,7 +72,7 @@ suite('RectilinearView', function () {
       assert.strictEqual(view.yaw(), Math.PI - 0.01);
     });
 
-    test('pitch', function () {
+    it('pitch', function () {
       var view = new RectilinearView();
       view.setPitch(Math.PI + 0.01);
       assert.strictEqual(view.pitch(), -Math.PI + 0.01);
@@ -83,8 +81,8 @@ suite('RectilinearView', function () {
     });
   });
 
-  suite('view limiting', function () {
-    test('yaw', function () {
+  describe('view limiting', function () {
+    it('yaw', function () {
       var view = new RectilinearView(
         { width: 100, height: 100 },
         RectilinearView.limit.yaw(-Math.PI / 2, Math.PI / 2)
@@ -95,7 +93,7 @@ suite('RectilinearView', function () {
       assert.closeTo(view.yaw(), Math.PI / 2, 0.000001);
     });
 
-    test('pitch', function () {
+    it('pitch', function () {
       var view = new RectilinearView(
         { width: 100, height: 100 },
         RectilinearView.limit.pitch(-Math.PI / 2, Math.PI / 2)
@@ -106,7 +104,7 @@ suite('RectilinearView', function () {
       assert.strictEqual(view.pitch(), Math.PI / 2);
     });
 
-    test('hfov', function () {
+    it('hfov', function () {
       var hmin = Math.PI / 16,
         hmax = Math.PI / 4;
       var vmin = htov(hmin, 200, 100),
@@ -121,7 +119,7 @@ suite('RectilinearView', function () {
       assert.strictEqual(view.fov(), vmax);
     });
 
-    test('vfov', function () {
+    it('vfov', function () {
       var vmin = Math.PI / 16,
         vmax = Math.PI / 4;
       var view = new RectilinearView(
@@ -134,7 +132,7 @@ suite('RectilinearView', function () {
       assert.strictEqual(view.fov(), vmax);
     });
 
-    test('resolution', function () {
+    it('resolution', function () {
       var view = new RectilinearView(
         { width: 512, height: 512 },
         RectilinearView.limit.resolution(2048)
@@ -144,7 +142,7 @@ suite('RectilinearView', function () {
       assert.strictEqual(view.fov(), minFov);
     });
 
-    test('enforced on initial parameters', function () {
+    it('enforced on initial parameters', function () {
       var view = new RectilinearView(
         { width: 100, height: 100, yaw: 0, pitch: 0, fov: Math.PI / 16 },
         RectilinearView.limit.vfov(Math.PI / 8, Math.PI / 4)
@@ -152,7 +150,7 @@ suite('RectilinearView', function () {
       assert.strictEqual(view.fov(), Math.PI / 8);
     });
 
-    test('replace existing limiter', function () {
+    it('replace existing limiter', function () {
       var view = new RectilinearView(
         { width: 100, height: 100, yaw: 0, pitch: 0, fov: Math.PI / 16 },
         RectilinearView.limit.vfov(Math.PI / 8, Math.PI / 4)
@@ -162,40 +160,40 @@ suite('RectilinearView', function () {
     });
   });
 
-  suite('projection', function () {
+  describe('projection', function () {
     var newProj,
       oldProj = mat4.create();
 
     var view = new RectilinearView({ width: 100, height: 100 });
 
-    test('compute initial', function () {
+    it('compute initial', function () {
       newProj = view.projection();
       assert.notDeepEqual(newProj, oldProj);
       mat4.copy(oldProj, newProj);
     });
 
-    test('update on yaw change', function () {
+    it('update on yaw change', function () {
       view.setYaw(Math.PI / 3);
       newProj = view.projection();
       assert.notDeepEqual(newProj, oldProj);
       mat4.copy(oldProj, newProj);
     });
 
-    test('update on pitch change', function () {
+    it('update on pitch change', function () {
       view.setPitch(Math.PI / 3);
       newProj = view.projection();
       assert.notDeepEqual(newProj, oldProj);
       mat4.copy(oldProj, newProj);
     });
 
-    test('update on fov change', function () {
+    it('update on fov change', function () {
       view.setFov(Math.PI / 3);
       newProj = view.projection();
       assert.notDeepEqual(newProj, oldProj);
       mat4.copy(oldProj, newProj);
     });
 
-    test('update on viewport change', function () {
+    it('update on viewport change', function () {
       view.setSize({ width: 100, height: 150 });
       newProj = view.projection();
       assert.notDeepEqual(newProj, oldProj);
@@ -203,8 +201,8 @@ suite('RectilinearView', function () {
     });
   });
 
-  suite('selectLevel', function () {
-    test('returns level', function () {
+  describe('selectLevel', function () {
+    it('returns level', function () {
       var geometry = new CubeGeometry(
         [512, 1024, 2048].map(function (size) {
           return { size: size, tileSize: 512 };
@@ -216,8 +214,8 @@ suite('RectilinearView', function () {
     });
   });
 
-  suite('intersects', function () {
-    suite('square viewport', function () {
+  describe('intersects', function () {
+    describe('square viewport', function () {
       var view = new RectilinearView({
         width: 100,
         height: 100,
@@ -226,7 +224,7 @@ suite('RectilinearView', function () {
         fov: Math.PI / 8,
       });
 
-      test('fully visible', function () {
+      it('fully visible', function () {
         var rect = [
           [-0.5, 0.5, -0.5],
           [0.5, 0.5, -0.5],
@@ -236,7 +234,7 @@ suite('RectilinearView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to top right', function () {
+      it('partially visible extending to top right', function () {
         var rect = [
           [0, 0, -0.5],
           [0, 2, -0.5],
@@ -246,7 +244,7 @@ suite('RectilinearView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to bottom right', function () {
+      it('partially visible extending to bottom right', function () {
         var rect = [
           [0, 0, -0.5],
           [0, -2, -0.5],
@@ -256,7 +254,7 @@ suite('RectilinearView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to bottom left', function () {
+      it('partially visible extending to bottom left', function () {
         var rect = [
           [0, 0, -0.5],
           [0, -2, -0.5],
@@ -266,7 +264,7 @@ suite('RectilinearView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to top left', function () {
+      it('partially visible extending to top left', function () {
         var rect = [
           [0, 0, -0.5],
           [0, 2, -0.5],
@@ -276,7 +274,7 @@ suite('RectilinearView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible and larger than viewport', function () {
+      it('partially visible and larger than viewport', function () {
         var rect = [
           [-2, 2, -0.5],
           [2, 2, -0.5],
@@ -286,7 +284,7 @@ suite('RectilinearView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('invisible above viewport', function () {
+      it('invisible above viewport', function () {
         var rect = [
           [-0.5, 1.5, -0.5],
           [0.5, 1.5, -0.5],
@@ -296,7 +294,7 @@ suite('RectilinearView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('invisible below viewport', function () {
+      it('invisible below viewport', function () {
         var rect = [
           [-0.5, -1.5, -0.5],
           [0.5, -1.5, -0.5],
@@ -306,7 +304,7 @@ suite('RectilinearView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('invisible to the left of viewport', function () {
+      it('invisible to the left of viewport', function () {
         var rect = [
           [-1.5, 0.5, -0.5],
           [-1, 0.5, -0.5],
@@ -316,7 +314,7 @@ suite('RectilinearView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('invisible to the right of viewport', function () {
+      it('invisible to the right of viewport', function () {
         var rect = [
           [1.5, 0.5, -0.5],
           [1, 0.5, -0.5],
@@ -326,7 +324,7 @@ suite('RectilinearView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('behind camera', function () {
+      it('behind camera', function () {
         var rect = [
           [-0.5, 0.5, 0.5],
           [0.5, 0.5, 0.5],
@@ -336,7 +334,7 @@ suite('RectilinearView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('partially behind camera', function () {
+      it('partially behind camera', function () {
         var rect = [
           [0, -0.5, 0.5],
           [0, 0.5, 0.5],
@@ -347,7 +345,7 @@ suite('RectilinearView', function () {
       });
     });
 
-    suite('wide viewport', function () {
+    describe('wide viewport', function () {
       var view = new RectilinearView({
         width: 200,
         height: 100,
@@ -356,7 +354,7 @@ suite('RectilinearView', function () {
         fov: Math.PI / 4,
       });
 
-      test('fully visible', function () {
+      it('fully visible', function () {
         var rect = [
           [-0.5, 0.5, -0.5],
           [0.5, 0.5, -0.5],
@@ -366,7 +364,7 @@ suite('RectilinearView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to top right', function () {
+      it('partially visible extending to top right', function () {
         var rect = [
           [0, 0, -0.5],
           [0, 2, -0.5],
@@ -376,7 +374,7 @@ suite('RectilinearView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to bottom right', function () {
+      it('partially visible extending to bottom right', function () {
         var rect = [
           [0, 0, -0.5],
           [0, -2, -0.5],
@@ -386,7 +384,7 @@ suite('RectilinearView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to bottom left', function () {
+      it('partially visible extending to bottom left', function () {
         var rect = [
           [0, 0, -0.5],
           [0, -2, -0.5],
@@ -396,7 +394,7 @@ suite('RectilinearView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to top left', function () {
+      it('partially visible extending to top left', function () {
         var rect = [
           [0, 0, -0.5],
           [0, 2, -0.5],
@@ -406,7 +404,7 @@ suite('RectilinearView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible and larger than viewport', function () {
+      it('partially visible and larger than viewport', function () {
         var rect = [
           [-2, 2, -0.5],
           [2, 2, -0.5],
@@ -416,7 +414,7 @@ suite('RectilinearView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('invisible above viewport', function () {
+      it('invisible above viewport', function () {
         var rect = [
           [-0.5, 1.5, -0.5],
           [0.5, 1.5, -0.5],
@@ -426,7 +424,7 @@ suite('RectilinearView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('invisible below viewport', function () {
+      it('invisible below viewport', function () {
         var rect = [
           [-0.5, -1.5, -0.5],
           [0.5, -1.5, -0.5],
@@ -436,7 +434,7 @@ suite('RectilinearView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('invisible to the left of viewport', function () {
+      it('invisible to the left of viewport', function () {
         var rect = [
           [-1.5, 0.5, -0.5],
           [-1, 0.5, -0.5],
@@ -446,7 +444,7 @@ suite('RectilinearView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('invisible to the right of viewport', function () {
+      it('invisible to the right of viewport', function () {
         var rect = [
           [1.5, 0.5, -0.5],
           [1, 0.5, -0.5],
@@ -456,7 +454,7 @@ suite('RectilinearView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('behind camera', function () {
+      it('behind camera', function () {
         var rect = [
           [-0.5, 0.5, 0.5],
           [0.5, 0.5, 0.5],
@@ -466,7 +464,7 @@ suite('RectilinearView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('partially behind camera', function () {
+      it('partially behind camera', function () {
         var rect = [
           [0, -0.5, 0.5],
           [0, 0.5, 0.5],
@@ -477,7 +475,7 @@ suite('RectilinearView', function () {
       });
     });
 
-    suite('narrow viewport', function () {
+    describe('narrow viewport', function () {
       var view = new RectilinearView({
         width: 100,
         height: 200,
@@ -486,7 +484,7 @@ suite('RectilinearView', function () {
         fov: Math.PI / 8,
       });
 
-      test('fully visible', function () {
+      it('fully visible', function () {
         var rect = [
           [-0.5, 0.5, -0.5],
           [0.5, 0.5, -0.5],
@@ -496,7 +494,7 @@ suite('RectilinearView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to top right', function () {
+      it('partially visible extending to top right', function () {
         var rect = [
           [0, 0, -0.5],
           [0, 2, -0.5],
@@ -506,7 +504,7 @@ suite('RectilinearView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to bottom right', function () {
+      it('partially visible extending to bottom right', function () {
         var rect = [
           [0, 0, -0.5],
           [0, -2, -0.5],
@@ -516,7 +514,7 @@ suite('RectilinearView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to bottom left', function () {
+      it('partially visible extending to bottom left', function () {
         var rect = [
           [0, 0, -0.5],
           [0, -2, -0.5],
@@ -526,7 +524,7 @@ suite('RectilinearView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to top left', function () {
+      it('partially visible extending to top left', function () {
         var rect = [
           [0, 0, -0.5],
           [0, 2, -0.5],
@@ -536,7 +534,7 @@ suite('RectilinearView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible and larger than viewport', function () {
+      it('partially visible and larger than viewport', function () {
         var rect = [
           [-2, 2, -0.5],
           [2, 2, -0.5],
@@ -546,7 +544,7 @@ suite('RectilinearView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('invisible above viewport', function () {
+      it('invisible above viewport', function () {
         var rect = [
           [-0.5, 1.5, -0.5],
           [0.5, 1.5, -0.5],
@@ -556,7 +554,7 @@ suite('RectilinearView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('invisible below viewport', function () {
+      it('invisible below viewport', function () {
         var rect = [
           [-0.5, -1.5, -0.5],
           [0.5, -1.5, -0.5],
@@ -566,7 +564,7 @@ suite('RectilinearView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('invisible to the left of viewport', function () {
+      it('invisible to the left of viewport', function () {
         var rect = [
           [-1.5, 0.5, -0.5],
           [-1, 0.5, -0.5],
@@ -576,7 +574,7 @@ suite('RectilinearView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('invisible to the right of viewport', function () {
+      it('invisible to the right of viewport', function () {
         var rect = [
           [1.5, 0.5, -0.5],
           [1, 0.5, -0.5],
@@ -586,7 +584,7 @@ suite('RectilinearView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('behind camera', function () {
+      it('behind camera', function () {
         var rect = [
           [-0.5, 0.5, 0.5],
           [0.5, 0.5, 0.5],
@@ -596,7 +594,7 @@ suite('RectilinearView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('partially behind camera', function () {
+      it('partially behind camera', function () {
         var rect = [
           [0, -0.5, 0.5],
           [0, 0.5, 0.5],
@@ -608,9 +606,9 @@ suite('RectilinearView', function () {
     });
   });
 
-  suite('coordinatesToScreen', function () {
-    suite('in general', function () {
-      test('writes to result argument', function () {
+  describe('coordinatesToScreen', function () {
+    describe('in general', function () {
+      it('writes to result argument', function () {
         var view = new RectilinearView({
           width: 100,
           height: 100,
@@ -624,8 +622,8 @@ suite('RectilinearView', function () {
       });
     });
 
-    suite('view looking ahead', function () {
-      test('center', function () {
+    describe('view looking ahead', function () {
+      it('center', function () {
         var view = new RectilinearView({
           width: 100,
           height: 100,
@@ -639,7 +637,7 @@ suite('RectilinearView', function () {
         assert.closeTo(coords.y, 50, 0.001);
       });
 
-      test('top left', function () {
+      it('top left', function () {
         var view = new RectilinearView({
           width: 100,
           height: 100,
@@ -653,7 +651,7 @@ suite('RectilinearView', function () {
         assert.closeTo(coords.y, 0, 1.0);
       });
 
-      test('bottom right', function () {
+      it('bottom right', function () {
         var view = new RectilinearView({
           width: 100,
           height: 100,
@@ -667,7 +665,7 @@ suite('RectilinearView', function () {
         assert.closeTo(coords.y, 100, 1.0);
       });
 
-      test('offscreen', function () {
+      it('offscreen', function () {
         var view = new RectilinearView({
           width: 100,
           height: 100,
@@ -681,7 +679,7 @@ suite('RectilinearView', function () {
         assert.closeTo(coords.y, 50, 0.5);
       });
 
-      test('behind camera', function () {
+      it('behind camera', function () {
         var view = new RectilinearView({
           width: 100,
           height: 100,
@@ -697,8 +695,8 @@ suite('RectilinearView', function () {
       });
     });
 
-    suite('view looking behind', function () {
-      test('center', function () {
+    describe('view looking behind', function () {
+      it('center', function () {
         var view = new RectilinearView({
           width: 100,
           height: 100,
@@ -712,7 +710,7 @@ suite('RectilinearView', function () {
         assert.closeTo(coords.y, 50, 0.001);
       });
 
-      test('top left', function () {
+      it('top left', function () {
         var view = new RectilinearView({
           width: 100,
           height: 100,
@@ -726,7 +724,7 @@ suite('RectilinearView', function () {
         assert.closeTo(coords.y, 0, 1.0);
       });
 
-      test('bottom right', function () {
+      it('bottom right', function () {
         var view = new RectilinearView({
           width: 100,
           height: 100,
@@ -740,7 +738,7 @@ suite('RectilinearView', function () {
         assert.closeTo(coords.y, 100, 1.0);
       });
 
-      test('offscreen', function () {
+      it('offscreen', function () {
         var view = new RectilinearView({
           width: 100,
           height: 100,
@@ -754,7 +752,7 @@ suite('RectilinearView', function () {
         assert.closeTo(coords.y, 50, 0.01);
       });
 
-      test('behind camera', function () {
+      it('behind camera', function () {
         var view = new RectilinearView({
           width: 100,
           height: 100,
@@ -771,9 +769,9 @@ suite('RectilinearView', function () {
     });
   });
 
-  suite('screenToCoordinates', function () {
-    suite('in general', function () {
-      test('writes to result argument', function () {
+  describe('screenToCoordinates', function () {
+    describe('in general', function () {
+      it('writes to result argument', function () {
         var view = new RectilinearView({
           width: 100,
           height: 100,
@@ -787,8 +785,8 @@ suite('RectilinearView', function () {
       });
     });
 
-    suite('view looking ahead', function () {
-      test('center', function () {
+    describe('view looking ahead', function () {
+      it('center', function () {
         var view = new RectilinearView({
           width: 100,
           height: 100,
@@ -802,7 +800,7 @@ suite('RectilinearView', function () {
         assert.closeTo(coords.pitch, 0, 0.001);
       });
 
-      test('top left', function () {
+      it('top left', function () {
         var view = new RectilinearView({
           width: 100,
           height: 100,
@@ -816,7 +814,7 @@ suite('RectilinearView', function () {
         assert.closeTo(coords.pitch, -Math.PI / 16, 0.1);
       });
 
-      test('bottom right', function () {
+      it('bottom right', function () {
         var view = new RectilinearView({
           width: 100,
           height: 100,
@@ -830,7 +828,7 @@ suite('RectilinearView', function () {
         assert.closeTo(coords.pitch, Math.PI / 16, 0.1);
       });
 
-      test('offscreen', function () {
+      it('offscreen', function () {
         var view = new RectilinearView({
           width: 100,
           height: 100,
@@ -845,8 +843,8 @@ suite('RectilinearView', function () {
       });
     });
 
-    suite('view looking behind', function () {
-      test('center', function () {
+    describe('view looking behind', function () {
+      it('center', function () {
         var view = new RectilinearView({
           width: 100,
           height: 100,
@@ -860,7 +858,7 @@ suite('RectilinearView', function () {
         assert.closeTo(coords.pitch, 0, 0.001);
       });
 
-      test('top left', function () {
+      it('top left', function () {
         var view = new RectilinearView({
           width: 100,
           height: 100,
@@ -874,7 +872,7 @@ suite('RectilinearView', function () {
         assert.closeTo(coords.pitch, -Math.PI / 16, 0.1);
       });
 
-      test('bottom right', function () {
+      it('bottom right', function () {
         var view = new RectilinearView({
           width: 100,
           height: 100,
@@ -888,7 +886,7 @@ suite('RectilinearView', function () {
         assert.closeTo(coords.pitch, Math.PI / 16, 0.1);
       });
 
-      test('offscreen', function () {
+      it('offscreen', function () {
         var view = new RectilinearView({
           width: 100,
           height: 100,

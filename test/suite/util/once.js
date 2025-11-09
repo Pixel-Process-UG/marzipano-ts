@@ -13,19 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
+import sinon from 'sinon';
 
-var assert = require('chai').assert;
-var sinon = require('sinon');
-
-var once = require('../../../src/util/once');
+import once from '../../../src/util/once.js';
 
 function twice(x) {
   return 2 * x;
 }
 
-suite('once', function () {
-  test('does not call a second time', function () {
+describe('once', function () {
+  it('does not call a second time', function () {
     var spy = sinon.spy(twice);
     var fn = once(spy);
     assert.strictEqual(fn(2), 4);

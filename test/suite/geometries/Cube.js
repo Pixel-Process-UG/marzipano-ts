@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
 
-var assert = require('chai').assert;
-
-var Cube = require('../../../src/geometries/Cube');
+import Cube from '../../../src/geometries/Cube.js';
 var CubeTile = Cube.Tile;
 
-suite('CubeGeometry', function () {
+describe('CubeGeometry', function () {
   function containsTile(tileList, tile) {
     for (var i = 0; i < tileList.length; i++) {
       if (tileList[i].equals(tile)) {
@@ -30,8 +28,8 @@ suite('CubeGeometry', function () {
     return false;
   }
 
-  suite('malformed levels', function () {
-    test('level size must not be smaller than parent level', function () {
+  describe('malformed levels', function () {
+    it('level size must not be smaller than parent level', function () {
       assert.throws(function () {
         new Cube([
           { tileSize: 512, size: 512 },
@@ -40,7 +38,7 @@ suite('CubeGeometry', function () {
       });
     });
 
-    test('level size must be multiple of parent level', function () {
+    it('level size must be multiple of parent level', function () {
       assert.throws(function () {
         new Cube([
           { tileSize: 512, size: 512 },
@@ -49,7 +47,7 @@ suite('CubeGeometry', function () {
       });
     });
 
-    test('number of tiles in level must not be smaller than parent level', function () {
+    it('number of tiles in level must not be smaller than parent level', function () {
       assert.throws(function () {
         new Cube([
           { tileSize: 128, size: 512 },
@@ -58,7 +56,7 @@ suite('CubeGeometry', function () {
       });
     });
 
-    test('number of tiles in level must be multiple of parent level', function () {
+    it('number of tiles in level must be multiple of parent level', function () {
       assert.throws(function () {
         new Cube([
           { tileSize: 256, size: 512 },
@@ -68,7 +66,7 @@ suite('CubeGeometry', function () {
     });
   });
 
-  suite('levels with constant tile size', function () {
+  describe('levels with constant tile size', function () {
     var cube = null;
 
     setup(function () {
@@ -80,12 +78,12 @@ suite('CubeGeometry', function () {
       cube = new Cube(levels);
     });
 
-    test('top tile does not have parent', function () {
+    it('top tile does not have parent', function () {
       var p = new CubeTile('f', 0, 0, 0, cube).parent();
       assert.isNull(p);
     });
 
-    test('parent of level 1', function () {
+    it('parent of level 1', function () {
       for (var tileX = 0; tileX < 2; tileX++) {
         for (var tileY = 0; tileY < 2; tileY++) {
           var p = new CubeTile('f', tileX, tileY, 1, cube).parent();
@@ -94,12 +92,12 @@ suite('CubeGeometry', function () {
       }
     });
 
-    test('parent of level 2', function () {
+    it('parent of level 2', function () {
       var p = new CubeTile('f', 2, 0, 2, cube).parent();
       assert.isTrue(p.equals(new CubeTile('f', 1, 0, 1, cube)));
     });
 
-    test('children of level 0', function () {
+    it('children of level 0', function () {
       var c = new CubeTile('f', 0, 0, 0, cube).children();
       assert.lengthOf(c, 4);
       assert.isTrue(containsTile(c, new CubeTile('f', 0, 0, 1, cube)));
@@ -108,7 +106,7 @@ suite('CubeGeometry', function () {
       assert.isTrue(containsTile(c, new CubeTile('f', 1, 1, 1, cube)));
     });
 
-    test('children of level 1 top right', function () {
+    it('children of level 1 top right', function () {
       var c = new CubeTile('f', 1, 0, 1, cube).children();
       assert.lengthOf(c, 4);
       assert.isTrue(containsTile(c, new CubeTile('f', 2, 0, 2, cube)));
@@ -118,7 +116,7 @@ suite('CubeGeometry', function () {
     });
   });
 
-  suite('levels with doubling tile size', function () {
+  describe('levels with doubling tile size', function () {
     var cube = null;
 
     setup(function () {
@@ -129,24 +127,24 @@ suite('CubeGeometry', function () {
       cube = new Cube(levels);
     });
 
-    test('parent top left tile', function () {
+    it('parent top left tile', function () {
       var p = new CubeTile('f', 0, 0, 1, cube).parent();
       assert.isTrue(p.equals(new CubeTile('f', 0, 0, 0, cube)));
     });
 
-    test('parent top right tile', function () {
+    it('parent top right tile', function () {
       var p = new CubeTile('f', 1, 0, 1, cube).parent();
       assert.isTrue(p.equals(new CubeTile('f', 1, 0, 0, cube)));
     });
 
-    test('children of level 0 top right', function () {
+    it('children of level 0 top right', function () {
       var c = new CubeTile('f', 1, 0, 0, cube).children();
       assert.lengthOf(c, 1);
       assert.isTrue(containsTile(c, new CubeTile('f', 1, 0, 1, cube)));
     });
   });
 
-  suite('levels with halving tile size', function () {
+  describe('levels with halving tile size', function () {
     var cube = null;
 
     setup(function () {
@@ -157,17 +155,17 @@ suite('CubeGeometry', function () {
       cube = new Cube(levels);
     });
 
-    test('parent of top left tile', function () {
+    it('parent of top left tile', function () {
       var p = new CubeTile('f', 0, 0, 1, cube).parent();
       assert.isTrue(p.equals(new CubeTile('f', 0, 0, 0, cube)));
     });
 
-    test('parent of top right tile', function () {
+    it('parent of top right tile', function () {
       var p = new CubeTile('f', 7, 0, 1, cube).parent();
       assert.isTrue(p.equals(new CubeTile('f', 1, 0, 0, cube)));
     });
 
-    test('children of level 0 top right', function () {
+    it('children of level 0 top right', function () {
       var c = new CubeTile('f', 1, 0, 0, cube).children();
       assert.lengthOf(c, 16);
       assert.isTrue(containsTile(c, new CubeTile('f', 4, 0, 1, cube)));
@@ -177,7 +175,7 @@ suite('CubeGeometry', function () {
     });
   });
 
-  suite('levels with tripling tile size', function () {
+  describe('levels with tripling tile size', function () {
     var cube = null;
 
     setup(function () {
@@ -188,12 +186,12 @@ suite('CubeGeometry', function () {
       cube = new Cube(levels);
     });
 
-    test('top right tile parent', function () {
+    it('top right tile parent', function () {
       var p = new CubeTile('f', 4, 2, 1, cube).parent();
       assert.isTrue(p.equals(new CubeTile('f', 1, 0, 0, cube)));
     });
 
-    test('top right tile children', function () {
+    it('top right tile children', function () {
       var c = new CubeTile('f', 1, 0, 0, cube).children();
       assert.lengthOf(c, 9);
       assert.isTrue(containsTile(c, new CubeTile('f', 3, 0, 1, cube)));

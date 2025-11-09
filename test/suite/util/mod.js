@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
 
-var assert = require('chai').assert;
-
-var mod = require('../../../src/util/mod');
+import mod from '../../../src/util/mod.js';
 
 var tab = [
   [1, 3, 1],
@@ -27,8 +25,8 @@ var tab = [
   [-3, 3, 0],
 ];
 
-suite('mod', function () {
-  test('mod', function () {
+describe('mod', function () {
+  it('mod', function () {
     for (var i = 0; i < tab.length; i++) {
       var a = tab[i][0],
         b = tab[i][1],

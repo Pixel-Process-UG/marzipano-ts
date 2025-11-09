@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
 
-var assert = require('chai').assert;
-
-var degToRad = require('../../../src/util/degToRad');
+import degToRad from '../../../src/util/degToRad.js';
 
 var tab = [
   [0, 0],
@@ -27,8 +25,8 @@ var tab = [
   [360, 2 * Math.PI],
 ];
 
-suite('degToRad', function () {
-  test('degToRad', function () {
+describe('degToRad', function () {
+  it('degToRad', function () {
     for (var i = 0; i < tab.length; i++) {
       var deg = tab[i][0],
         rad = tab[i][1];

@@ -13,45 +13,43 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
 
-var assert = require('chai').assert;
+import type from '../../../src/util/type.js';
 
-var type = require('../../../src/util/type');
-
-suite('type', function () {
-  test('undefined', function () {
+describe('type', function () {
+  it('undefined', function () {
     assert.strictEqual(type(undefined), 'undefined');
   });
 
-  test('null', function () {
+  it('null', function () {
     assert.strictEqual(type(null), 'null');
   });
 
-  test('number', function () {
+  it('number', function () {
     assert.strictEqual(type(0), 'number');
   });
 
-  test('boolean', function () {
+  it('boolean', function () {
     assert.strictEqual(type(false), 'boolean');
   });
 
-  test('array', function () {
+  it('array', function () {
     assert.strictEqual(type([]), 'array');
   });
 
-  test('object', function () {
+  it('object', function () {
     assert.strictEqual(type({}), 'object');
   });
 
-  test('function', function () {
+  it('function', function () {
     assert.strictEqual(
       type(function () {}),
       'function'
     );
   });
 
-  test('regexp', function () {
+  it('regexp', function () {
     assert.strictEqual(type(/.*/), 'regexp');
   });
 });

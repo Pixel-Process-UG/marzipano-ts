@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
 
-var assert = require('chai').assert;
+import defaults from '../../../src/util/defaults.js';
 
-var defaults = require('../../../src/util/defaults');
-
-suite('defaults', function () {
-  test('defaults', function () {
+describe('defaults', function () {
+  it('defaults', function () {
     var originalObj = { foo: 42, bar: 37 };
     var defaultsObj = { foo: 100, quux: 200 };
     var expectedObj = { foo: 42, bar: 37, quux: 200 };

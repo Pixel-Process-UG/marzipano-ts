@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
-
-var assert = require('chai').assert;
-var sinon = require('sinon');
+import { assert } from 'chai';
+import sinon from 'sinon';
 sinon.assert.expose(assert, { prefix: '' });
 
-var StaticAsset = require('../../../src/assets/Static');
+import StaticAsset from '../../../src/assets/Static.js';
 
 function createTestCanvas(width, height) {
   var canvas = document.createElement('canvas');
@@ -28,14 +26,14 @@ function createTestCanvas(width, height) {
   return canvas;
 }
 
-suite('StaticAsset', function () {
-  test('element', function () {
+describe('StaticAsset', function () {
+  it('element', function () {
     var img = new Image();
     var asset = new StaticAsset(img);
     assert.strictEqual(asset.element(), img);
   });
 
-  test('image width and height', function (done) {
+  it('image width and height', function (done) {
     var img = new Image(10, 20);
     img.onload = function () {
       var asset = new StaticAsset(img);
@@ -46,19 +44,19 @@ suite('StaticAsset', function () {
     img.src = createTestCanvas(12, 34).toDataURL();
   });
 
-  test('canvas width and height', function () {
+  it('canvas width and height', function () {
     var asset = new StaticAsset(createTestCanvas(12, 34));
     assert.strictEqual(asset.width(), 12);
     assert.strictEqual(asset.height(), 34);
   });
 
-  test('isDynamic', function () {
+  it('isDynamic', function () {
     var img = new Image();
     var asset = new StaticAsset(img);
     assert.isFalse(asset.isDynamic());
   });
 
-  test('timestamp', function () {
+  it('timestamp', function () {
     var img = new Image();
     var asset = new StaticAsset(img);
     assert.strictEqual(asset.timestamp(), 0);

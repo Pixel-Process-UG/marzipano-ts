@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
 
-var assert = require('chai').assert;
+import clamp from '../../../src/util/clamp.js';
 
-var clamp = require('../../../src/util/clamp');
-
-suite('clamp', function () {
-  test('below', function () {
+describe('clamp', function () {
+  it('below', function () {
     assert.strictEqual(clamp(-0.5, 0, 1), 0);
   });
 
-  test('above', function () {
+  it('above', function () {
     assert.strictEqual(clamp(1.5, 0, 1), 1);
   });
 });

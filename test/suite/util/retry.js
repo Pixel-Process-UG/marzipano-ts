@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
+import sinon from 'sinon';
+import wait from '../../wait.js';
 
-var assert = require('chai').assert;
-var sinon = require('sinon');
-var wait = require('../../wait');
-
-var retry = require('../../../src/util/retry');
-var defer = require('../../../src/util/defer');
-var cancelize = require('../../../src/util/cancelize');
+import retry from '../../../src/util/retry.js';
+import defer from '../../../src/util/defer.js';
+import cancelize from '../../../src/util/cancelize.js';
 
 var error = new Error('err');
 
@@ -39,8 +37,8 @@ function flaky(nfail) {
   };
 }
 
-suite('retry', function () {
-  test('zero failures', function (done) {
+describe('retry', function () {
+  it('zero failures', function (done) {
     var spy = sinon.spy();
     var fn = retry(cancelize(flaky(0)));
     fn(2, spy);
@@ -51,7 +49,7 @@ suite('retry', function () {
     });
   });
 
-  test('one failure', function (done) {
+  it('one failure', function (done) {
     var spy = sinon.spy();
     var fn = retry(cancelize(flaky(1)));
     fn(2, spy);
@@ -62,7 +60,7 @@ suite('retry', function () {
     });
   });
 
-  test('two failures', function (done) {
+  it('two failures', function (done) {
     var spy = sinon.spy();
     var fn = retry(cancelize(flaky(2)));
     fn(2, spy);
@@ -73,7 +71,7 @@ suite('retry', function () {
     });
   });
 
-  test('cancel', function (done) {
+  it('cancel', function (done) {
     var spy = sinon.spy();
     var fn = retry(cancelize(flaky(0)));
     var cancel = fn(2, spy);

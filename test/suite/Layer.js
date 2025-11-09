@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
+import sinon from 'sinon';
 
-var assert = require('chai').assert;
-var sinon = require('sinon');
+import eventEmitter from 'minimal-event-emitter';
 
-var eventEmitter = require('minimal-event-emitter');
-
-var Layer = require('../../src/Layer');
+import Layer from '../../src/Layer.js';
 
 function MockStage() {}
 
@@ -49,7 +47,7 @@ function MockTextureStore() {
 }
 eventEmitter(MockTextureStore);
 
-suite('Layer', function () {
+describe('Layer', function () {
   var stage;
   var source;
   var geometry;
@@ -72,7 +70,7 @@ suite('Layer', function () {
     stage = source = geometry = view = textureStore = null;
   });
 
-  test('getters', function () {
+  it('getters', function () {
     var layer = new Layer(source, geometry, view, textureStore);
     assert.strictEqual(source, layer.source());
     assert.strictEqual(geometry, layer.geometry());
@@ -80,14 +78,14 @@ suite('Layer', function () {
     assert.strictEqual(textureStore, layer.textureStore());
   });
 
-  test('visible tiles', function () {
+  it('visible tiles', function () {
     var layer = new Layer(source, geometry, view, textureStore);
     var tiles = [];
     layer.visibleTiles(tiles);
     assert.isTrue(geometry.visibleTiles.calledWithExactly(view, selectedLevel, tiles));
   });
 
-  test('fixed level', function () {
+  it('fixed level', function () {
     var layer = new Layer(source, geometry, view, textureStore);
     var spy = sinon.spy();
     layer.addEventListener('fixedLevelChange', spy);
@@ -109,7 +107,7 @@ suite('Layer', function () {
     assert.isTrue(geometry.visibleTiles.calledWithExactly(view, selectedLevel, tiles));
   });
 
-  test('pin level', function () {
+  it('pin level', function () {
     var layer = new Layer(source, geometry, view, textureStore);
     geometry.levelTiles.returns(tileList);
     layer.pinLevel(1);
@@ -124,7 +122,7 @@ suite('Layer', function () {
     }
   });
 
-  test('pin first level', function () {
+  it('pin first level', function () {
     var layer = new Layer(source, geometry, view, textureStore);
     geometry.levelTiles.returns(tileList);
     layer.pinFirstLevel();
@@ -139,7 +137,7 @@ suite('Layer', function () {
     }
   });
 
-  test('view events', function () {
+  it('view events', function () {
     var layer = new Layer(source, geometry, view, textureStore);
     var spy = sinon.spy();
     layer.addEventListener('viewChange', spy);
@@ -147,7 +145,7 @@ suite('Layer', function () {
     assert.isTrue(spy.calledOnce);
   });
 
-  test('texture store events', function () {
+  it('texture store events', function () {
     var layer = new Layer(source, geometry, view, textureStore);
     var spy = sinon.spy();
     layer.addEventListener('textureStoreChange', spy);

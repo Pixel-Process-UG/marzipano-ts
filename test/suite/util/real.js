@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
 
-var assert = require('chai').assert;
-
-var real = require('../../../src/util/real');
+import real from '../../../src/util/real.js';
 
 var tab = [
   [0, true],
@@ -28,8 +26,8 @@ var tab = [
   [-Infinity, false],
 ];
 
-suite('real', function () {
-  test('real', function () {
+describe('real', function () {
+  it('real', function () {
     for (var i = 0; i < tab.length; i++) {
       var val = tab[i][0],
         ret = tab[i][1];

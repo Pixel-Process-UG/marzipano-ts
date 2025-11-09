@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
 
-var assert = require('chai').assert;
-
-var FlatView = require('../../../src/views/Flat');
-var FlatGeometry = require('../../../src/geometries/Flat');
+import FlatView from '../../../src/views/Flat.js';
+import FlatGeometry from '../../../src/geometries/Flat.js';
 var mat4 = require('gl-matrix').mat4;
-var pixelRatio = require('../../../src/util/pixelRatio');
+import pixelRatio from '../../../src/util/pixelRatio.js';
 
-suite('FlatView', function () {
-  suite('constructor', function () {
-    test('sets default parameters', function () {
+describe('FlatView', function () {
+  describe('constructor', function () {
+    it('sets default parameters', function () {
       var view = new FlatView({ mediaAspectRatio: 1 });
       assert.strictEqual(view.x(), 0.5);
       assert.strictEqual(view.y(), 0.5);
@@ -32,26 +30,26 @@ suite('FlatView', function () {
     });
   });
 
-  suite('getters/setters', function () {
-    test('x', function () {
+  describe('getters/setters', function () {
+    it('x', function () {
       var view = new FlatView({ mediaAspectRatio: 1 });
       view.setX(1.234);
       assert.strictEqual(view.x(), 1.234);
     });
 
-    test('y', function () {
+    it('y', function () {
       var view = new FlatView({ mediaAspectRatio: 1 });
       view.setY(1.234);
       assert.strictEqual(view.y(), 1.234);
     });
 
-    test('zoom', function () {
+    it('zoom', function () {
       var view = new FlatView({ mediaAspectRatio: 1 });
       view.setZoom(1.234);
       assert.strictEqual(view.zoom(), 1.234);
     });
 
-    test('size', function () {
+    it('size', function () {
       var view = new FlatView({ mediaAspectRatio: 1 });
       view.setSize({ width: 123, height: 456 });
       var obj = {};
@@ -64,8 +62,8 @@ suite('FlatView', function () {
     });
   });
 
-  suite('view limiting', function () {
-    test('x', function () {
+  describe('view limiting', function () {
+    it('x', function () {
       var view = new FlatView(
         { width: 100, height: 100, mediaAspectRatio: 1 },
         FlatView.limit.x(0.25, 0.75)
@@ -76,7 +74,7 @@ suite('FlatView', function () {
       assert.strictEqual(view.x(), 0.75);
     });
 
-    test('y', function () {
+    it('y', function () {
       var view = new FlatView(
         { width: 100, height: 100, mediaAspectRatio: 1 },
         FlatView.limit.y(0.25, 0.75)
@@ -87,7 +85,7 @@ suite('FlatView', function () {
       assert.strictEqual(view.y(), 0.75);
     });
 
-    test('zoom', function () {
+    it('zoom', function () {
       var view = new FlatView(
         { width: 100, height: 100, mediaAspectRatio: 1 },
         FlatView.limit.zoom(0.5, 2)
@@ -98,7 +96,7 @@ suite('FlatView', function () {
       assert.strictEqual(view.zoom(), 2);
     });
 
-    test('resolution', function () {
+    it('resolution', function () {
       var view = new FlatView(
         { width: 512, height: 512, mediaAspectRatio: 1 },
         FlatView.limit.resolution(2048)
@@ -108,7 +106,7 @@ suite('FlatView', function () {
       assert.strictEqual(view.zoom(), minZoom);
     });
 
-    test('visibleX', function () {
+    it('visibleX', function () {
       var view = new FlatView(
         { width: 100, height: 100, mediaAspectRatio: 1 },
         FlatView.limit.visibleX(0.25, 0.75)
@@ -119,7 +117,7 @@ suite('FlatView', function () {
       assert.strictEqual(view.x(), 0.5);
     });
 
-    test('visibleY', function () {
+    it('visibleY', function () {
       var view = new FlatView(
         { width: 100, height: 100, mediaAspectRatio: 1 },
         FlatView.limit.visibleY(0.25, 0.75)
@@ -130,8 +128,8 @@ suite('FlatView', function () {
       assert.strictEqual(view.y(), 0.5);
     });
 
-    suite('letterbox', function () {
-      test('square image square viewport', function () {
+    describe('letterbox', function () {
+      it('square image square viewport', function () {
         var view = new FlatView(
           { width: 100, height: 100, mediaAspectRatio: 1 },
           FlatView.limit.letterbox()
@@ -140,7 +138,7 @@ suite('FlatView', function () {
         assert.strictEqual(view.zoom(), 1.0);
       });
 
-      test('square image on narrow viewport', function () {
+      it('square image on narrow viewport', function () {
         var view = new FlatView(
           { width: 100, height: 200, mediaAspectRatio: 1 },
           FlatView.limit.letterbox()
@@ -149,7 +147,7 @@ suite('FlatView', function () {
         assert.strictEqual(view.zoom(), 1.0);
       });
 
-      test('square image on wide viewport', function () {
+      it('square image on wide viewport', function () {
         var view = new FlatView(
           { width: 200, height: 100, mediaAspectRatio: 1 },
           FlatView.limit.letterbox()
@@ -158,7 +156,7 @@ suite('FlatView', function () {
         assert.strictEqual(view.zoom(), 2.0);
       });
 
-      test('non-square image narrower than viewport', function () {
+      it('non-square image narrower than viewport', function () {
         var view = new FlatView(
           { width: 100, height: 100, mediaAspectRatio: 0.5 },
           FlatView.limit.letterbox()
@@ -167,7 +165,7 @@ suite('FlatView', function () {
         assert.strictEqual(view.zoom(), 2.0);
       });
 
-      test('non-square image wider than viewport', function () {
+      it('non-square image wider than viewport', function () {
         var view = new FlatView(
           { width: 100, height: 100, mediaAspectRatio: 2 },
           FlatView.limit.letterbox()
@@ -177,7 +175,7 @@ suite('FlatView', function () {
       });
     });
 
-    test('enforced on initial parameters', function () {
+    it('enforced on initial parameters', function () {
       var view = new FlatView(
         { width: 100, height: 100, yaw: 0, pitch: 0, zoom: 0.25, mediaAspectRatio: 1 },
         FlatView.limit.zoom(0.5, 1)
@@ -185,7 +183,7 @@ suite('FlatView', function () {
       assert.strictEqual(view.zoom(), 0.5);
     });
 
-    test('replace existing limiter', function () {
+    it('replace existing limiter', function () {
       var view = new FlatView(
         { width: 100, height: 100, yaw: 0, pitch: 0, zoom: 0.25, mediaAspectRatio: 1 },
         FlatView.limit.zoom(0.5, 1)
@@ -195,47 +193,47 @@ suite('FlatView', function () {
     });
   });
 
-  suite('projection', function () {
+  describe('projection', function () {
     var newProj,
       oldProj = mat4.create();
 
     var view = new FlatView({ width: 100, height: 100, mediaAspectRatio: 1 });
 
-    test('compute initial', function () {
+    it('compute initial', function () {
       newProj = view.projection();
       assert.notDeepEqual(newProj, oldProj);
       mat4.copy(oldProj, newProj);
     });
 
-    test('update on x change', function () {
+    it('update on x change', function () {
       view.setX(0.1);
       newProj = view.projection();
       assert.notDeepEqual(newProj, oldProj);
       mat4.copy(oldProj, newProj);
     });
 
-    test('update on y change', function () {
+    it('update on y change', function () {
       view.setY(0.1);
       newProj = view.projection();
       assert.notDeepEqual(newProj, oldProj);
       mat4.copy(oldProj, newProj);
     });
 
-    test('update on zoom change', function () {
+    it('update on zoom change', function () {
       view.setZoom(0.1);
       newProj = view.projection();
       assert.notDeepEqual(newProj, oldProj);
       mat4.copy(oldProj, newProj);
     });
 
-    test('update on media aspect ratio change', function () {
+    it('update on media aspect ratio change', function () {
       view.setMediaAspectRatio(0.5);
       newProj = view.projection();
       assert.notDeepEqual(newProj, oldProj);
       mat4.copy(oldProj, newProj);
     });
 
-    test('update on viewport change', function () {
+    it('update on viewport change', function () {
       view.setSize({ width: 100, height: 150 });
       newProj = view.projection();
       assert.notDeepEqual(newProj, oldProj);
@@ -243,8 +241,8 @@ suite('FlatView', function () {
     });
   });
 
-  suite('selectLevel', function () {
-    test('returns level', function () {
+  describe('selectLevel', function () {
+    it('returns level', function () {
       var geometry = new FlatGeometry(
         [512, 1024, 2048].map(function (size) {
           return { width: size, height: size, tileWidth: 512, tileHeight: 512 };
@@ -256,8 +254,8 @@ suite('FlatView', function () {
     });
   });
 
-  suite('intersects', function () {
-    suite('square viewport', function () {
+  describe('intersects', function () {
+    describe('square viewport', function () {
       var view = new FlatView({
         mediaAspectRatio: 1,
         width: 512,
@@ -267,7 +265,7 @@ suite('FlatView', function () {
         zoom: 1.0,
       });
 
-      test('fully visible', function () {
+      it('fully visible', function () {
         var rect = [
           [-0.25, -0.25],
           [-0.25, 0.25],
@@ -277,7 +275,7 @@ suite('FlatView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to top right', function () {
+      it('partially visible extending to top right', function () {
         var rect = [
           [0.25, 0.25],
           [0.25, 0.75],
@@ -287,7 +285,7 @@ suite('FlatView', function () {
         assert(view.intersects(rect));
       });
 
-      test('partially visible extending to bottom right', function () {
+      it('partially visible extending to bottom right', function () {
         var rect = [
           [0.25, -0.25],
           [0.25, -0.75],
@@ -297,7 +295,7 @@ suite('FlatView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to bottom left', function () {
+      it('partially visible extending to bottom left', function () {
         var rect = [
           [-0.25, -0.25],
           [-0.25, -0.75],
@@ -307,7 +305,7 @@ suite('FlatView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to top left', function () {
+      it('partially visible extending to top left', function () {
         var rect = [
           [-0.25, 0.25],
           [-0.25, 0.75],
@@ -317,7 +315,7 @@ suite('FlatView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('above viewport', function () {
+      it('above viewport', function () {
         var rect = [
           [-0.25, 0.75],
           [-0.25, 1.25],
@@ -327,7 +325,7 @@ suite('FlatView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('below viewport', function () {
+      it('below viewport', function () {
         var rect = [
           [-0.25, -0.75],
           [-0.25, -1.25],
@@ -337,7 +335,7 @@ suite('FlatView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('to the left of viewport', function () {
+      it('to the left of viewport', function () {
         var rect = [
           [-1.25, -0.25],
           [-1.25, 0.25],
@@ -347,7 +345,7 @@ suite('FlatView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('to the right of viewport', function () {
+      it('to the right of viewport', function () {
         var rect = [
           [1.25, -0.25],
           [1.25, 0.25],
@@ -358,7 +356,7 @@ suite('FlatView', function () {
       });
     });
 
-    suite('wide viewport', function () {
+    describe('wide viewport', function () {
       var view = new FlatView({
         width: 200,
         height: 100,
@@ -368,7 +366,7 @@ suite('FlatView', function () {
         mediaAspectRatio: 1,
       });
 
-      test('fully visible', function () {
+      it('fully visible', function () {
         var rect = [
           [-0.25, -0.1],
           [-0.25, 0.1],
@@ -378,7 +376,7 @@ suite('FlatView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to top right', function () {
+      it('partially visible extending to top right', function () {
         var rect = [
           [0.25, 0.1],
           [0.25, 0.4],
@@ -388,7 +386,7 @@ suite('FlatView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to bottom right', function () {
+      it('partially visible extending to bottom right', function () {
         var rect = [
           [0.25, -0.1],
           [0.25, -0.4],
@@ -398,7 +396,7 @@ suite('FlatView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to bottom left', function () {
+      it('partially visible extending to bottom left', function () {
         var rect = [
           [-0.25, -0.1],
           [-0.25, -0.4],
@@ -408,7 +406,7 @@ suite('FlatView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to top left', function () {
+      it('partially visible extending to top left', function () {
         var rect = [
           [-0.25, 0.1],
           [-0.25, 0.4],
@@ -418,7 +416,7 @@ suite('FlatView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('above viewport', function () {
+      it('above viewport', function () {
         var rect = [
           [-0.25, 0.4],
           [-0.25, 0.7],
@@ -428,7 +426,7 @@ suite('FlatView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('below viewport', function () {
+      it('below viewport', function () {
         var rect = [
           [-0.25, -0.4],
           [-0.25, -0.7],
@@ -438,7 +436,7 @@ suite('FlatView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('to the left of viewport', function () {
+      it('to the left of viewport', function () {
         var rect = [
           [-1.25, -0.1],
           [-1.25, 0.1],
@@ -448,7 +446,7 @@ suite('FlatView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('to the right of viewport', function () {
+      it('to the right of viewport', function () {
         var rect = [
           [1.25, -0.1],
           [1.25, 0.1],
@@ -459,7 +457,7 @@ suite('FlatView', function () {
       });
     });
 
-    suite('narrow viewport', function () {
+    describe('narrow viewport', function () {
       var view = new FlatView({
         width: 100,
         height: 200,
@@ -469,7 +467,7 @@ suite('FlatView', function () {
         mediaAspectRatio: 1,
       });
 
-      test('fully visible', function () {
+      it('fully visible', function () {
         var rect = [
           [-0.1, -0.25],
           [-0.1, 0.25],
@@ -479,7 +477,7 @@ suite('FlatView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to top right', function () {
+      it('partially visible extending to top right', function () {
         var rect = [
           [0.1, 0.25],
           [0.1, 0.75],
@@ -489,7 +487,7 @@ suite('FlatView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to bottom right', function () {
+      it('partially visible extending to bottom right', function () {
         var rect = [
           [0.1, -0.25],
           [0.1, -0.75],
@@ -499,7 +497,7 @@ suite('FlatView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to bottom left', function () {
+      it('partially visible extending to bottom left', function () {
         var rect = [
           [-0.1, -0.25],
           [-0.1, -0.75],
@@ -509,7 +507,7 @@ suite('FlatView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('partially visible extending to top left', function () {
+      it('partially visible extending to top left', function () {
         var rect = [
           [-0.1, 0.25],
           [-0.1, 0.75],
@@ -519,7 +517,7 @@ suite('FlatView', function () {
         assert.isTrue(view.intersects(rect));
       });
 
-      test('above viewport', function () {
+      it('above viewport', function () {
         var rect = [
           [-0.1, 0.75],
           [-0.1, 1.25],
@@ -529,7 +527,7 @@ suite('FlatView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('below viewport', function () {
+      it('below viewport', function () {
         var rect = [
           [-0.1, -0.75],
           [-0.1, -1.25],
@@ -539,7 +537,7 @@ suite('FlatView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('to the left of viewport', function () {
+      it('to the left of viewport', function () {
         var rect = [
           [-0.7, -0.25],
           [-0.7, 0.25],
@@ -549,7 +547,7 @@ suite('FlatView', function () {
         assert.isFalse(view.intersects(rect));
       });
 
-      test('to the right of viewport', function () {
+      it('to the right of viewport', function () {
         var rect = [
           [0.7, -0.25],
           [0.7, 0.25],
@@ -561,9 +559,9 @@ suite('FlatView', function () {
     });
   });
 
-  suite('coordinatesToScreen', function () {
-    suite('in general', function () {
-      test('writes to result argument', function () {
+  describe('coordinatesToScreen', function () {
+    describe('in general', function () {
+      it('writes to result argument', function () {
         var view = new FlatView({
           width: 100,
           height: 100,
@@ -578,8 +576,8 @@ suite('FlatView', function () {
       });
     });
 
-    suite('view centered on center', function () {
-      test('center', function () {
+    describe('view centered on center', function () {
+      it('center', function () {
         var view = new FlatView({
           width: 100,
           height: 100,
@@ -594,7 +592,7 @@ suite('FlatView', function () {
         assert.closeTo(coords.y, 50, 0.001);
       });
 
-      test('top left', function () {
+      it('top left', function () {
         var view = new FlatView({
           width: 100,
           height: 100,
@@ -609,7 +607,7 @@ suite('FlatView', function () {
         assert.closeTo(coords.y, 0, 0.001);
       });
 
-      test('bottom right', function () {
+      it('bottom right', function () {
         var view = new FlatView({
           width: 100,
           height: 100,
@@ -625,8 +623,8 @@ suite('FlatView', function () {
       });
     });
 
-    suite('view centered on top left corner', function () {
-      test('center', function () {
+    describe('view centered on top left corner', function () {
+      it('center', function () {
         var view = new FlatView({
           width: 100,
           height: 100,
@@ -641,7 +639,7 @@ suite('FlatView', function () {
         assert.closeTo(coords.y, 50, 0.001);
       });
 
-      test('top left', function () {
+      it('top left', function () {
         var view = new FlatView({
           width: 100,
           height: 100,
@@ -656,7 +654,7 @@ suite('FlatView', function () {
         assert.closeTo(coords.y, 0, 0.001);
       });
 
-      test('bottom right', function () {
+      it('bottom right', function () {
         var view = new FlatView({
           width: 100,
           height: 100,
@@ -672,8 +670,8 @@ suite('FlatView', function () {
       });
     });
 
-    suite('view centered on bottom right corner', function () {
-      test('center', function () {
+    describe('view centered on bottom right corner', function () {
+      it('center', function () {
         var view = new FlatView({
           width: 100,
           height: 100,
@@ -688,7 +686,7 @@ suite('FlatView', function () {
         assert.closeTo(coords.y, 50, 0.001);
       });
 
-      test('top left', function () {
+      it('top left', function () {
         var view = new FlatView({
           width: 100,
           height: 100,
@@ -703,7 +701,7 @@ suite('FlatView', function () {
         assert.closeTo(coords.y, 0, 0.001);
       });
 
-      test('bottom right', function () {
+      it('bottom right', function () {
         var view = new FlatView({
           width: 100,
           height: 100,
@@ -720,9 +718,9 @@ suite('FlatView', function () {
     });
   });
 
-  suite('screenToCoordinates', function () {
-    suite('in general', function () {
-      test('writes to result argument', function () {
+  describe('screenToCoordinates', function () {
+    describe('in general', function () {
+      it('writes to result argument', function () {
         var view = new FlatView({
           width: 100,
           height: 100,
@@ -737,8 +735,8 @@ suite('FlatView', function () {
       });
     });
 
-    suite('view centered on center', function () {
-      test('center', function () {
+    describe('view centered on center', function () {
+      it('center', function () {
         var view = new FlatView({
           width: 100,
           height: 100,
@@ -753,7 +751,7 @@ suite('FlatView', function () {
         assert.closeTo(coords.y, 0.5, 0.001);
       });
 
-      test('top left', function () {
+      it('top left', function () {
         var view = new FlatView({
           width: 100,
           height: 100,
@@ -768,7 +766,7 @@ suite('FlatView', function () {
         assert.closeTo(coords.y, 0.25, 0.001);
       });
 
-      test('bottom right', function () {
+      it('bottom right', function () {
         var view = new FlatView({
           width: 100,
           height: 100,
@@ -784,8 +782,8 @@ suite('FlatView', function () {
       });
     });
 
-    suite('view centered on top left corner', function () {
-      test('center', function () {
+    describe('view centered on top left corner', function () {
+      it('center', function () {
         var view = new FlatView({
           width: 100,
           height: 100,
@@ -800,7 +798,7 @@ suite('FlatView', function () {
         assert.closeTo(coords.y, 0, 0.001);
       });
 
-      test('top left', function () {
+      it('top left', function () {
         var view = new FlatView({
           width: 100,
           height: 100,
@@ -815,7 +813,7 @@ suite('FlatView', function () {
         assert.closeTo(coords.y, -0.25, 0.001);
       });
 
-      test('bottom right', function () {
+      it('bottom right', function () {
         var view = new FlatView({
           width: 100,
           height: 100,
@@ -831,8 +829,8 @@ suite('FlatView', function () {
       });
     });
 
-    suite('view centered on bottom right corner', function () {
-      test('center', function () {
+    describe('view centered on bottom right corner', function () {
+      it('center', function () {
         var view = new FlatView({
           width: 100,
           height: 100,
@@ -847,7 +845,7 @@ suite('FlatView', function () {
         assert.closeTo(coords.y, 1, 0.001);
       });
 
-      test('top left', function () {
+      it('top left', function () {
         var view = new FlatView({
           width: 100,
           height: 100,
@@ -862,7 +860,7 @@ suite('FlatView', function () {
         assert.closeTo(coords.y, 0.75, 0.001);
       });
 
-      test('bottom right', function () {
+      it('bottom right', function () {
         var view = new FlatView({
           width: 100,
           height: 100,

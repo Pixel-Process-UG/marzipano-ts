@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
+import sinon from 'sinon';
+import wait from '../../wait.js';
 
-var assert = require('chai').assert;
-var sinon = require('sinon');
-var wait = require('../../wait');
-
-var chain = require('../../../src/util/chain');
-var cancelize = require('../../../src/util/cancelize');
+import chain from '../../../src/util/chain.js';
+import cancelize from '../../../src/util/cancelize.js';
 
 var error = new Error('err');
 
@@ -63,8 +61,8 @@ function fail(x, done) {
   return noop;
 }
 
-suite('chain', function () {
-  test('zero', function () {
+describe('chain', function () {
+  it('zero', function () {
     var fn = chain();
     var spy = sinon.spy();
     fn(1, 2, 3, spy);
@@ -73,7 +71,7 @@ suite('chain', function () {
     });
   });
 
-  test('one async', function (done) {
+  it('one async', function (done) {
     var fn = chain(twiceAsync);
     var spy = sinon.spy();
     fn(2, spy);
@@ -83,7 +81,7 @@ suite('chain', function () {
     });
   });
 
-  test('two async', function (done) {
+  it('two async', function (done) {
     var fn = chain(twiceAsync, squareAsync);
     var spy = sinon.spy();
     fn(2, spy);
@@ -93,7 +91,7 @@ suite('chain', function () {
     });
   });
 
-  test('one sync', function (done) {
+  it('one sync', function (done) {
     var fn = chain(twiceSync);
     var spy = sinon.spy();
     fn(2, spy);
@@ -103,7 +101,7 @@ suite('chain', function () {
     });
   });
 
-  test('two sync', function (done) {
+  it('two sync', function (done) {
     var fn = chain(twiceSync, squareSync);
     var spy = sinon.spy();
     fn(2, spy);
@@ -113,7 +111,7 @@ suite('chain', function () {
     });
   });
 
-  test('one sync, one async', function (done) {
+  it('one sync, one async', function (done) {
     var fn = chain(twiceSync, squareAsync);
     var spy = sinon.spy();
     fn(2, spy);
@@ -123,7 +121,7 @@ suite('chain', function () {
     });
   });
 
-  test('one async, one sync', function (done) {
+  it('one async, one sync', function (done) {
     var fn = chain(twiceAsync, squareSync);
     var spy = sinon.spy();
     fn(2, spy);
@@ -133,7 +131,7 @@ suite('chain', function () {
     });
   });
 
-  test('error aborts chain', function (done) {
+  it('error aborts chain', function (done) {
     var spy = sinon.spy();
     var neverCalledSpy = sinon.spy(succeed);
     var fn = chain(fail, neverCalledSpy);
@@ -145,7 +143,7 @@ suite('chain', function () {
     });
   });
 
-  test('cancel aborts chain', function (done) {
+  it('cancel aborts chain', function (done) {
     var spy = sinon.spy();
     var neverCalledSpy = sinon.spy(succeed);
     var fn = chain(cancelize(twiceAsync), neverCalledSpy);

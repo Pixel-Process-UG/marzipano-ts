@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import WorkPool from '../../../src/collections/WorkPool.js';
 
-var WorkPool = require('../../../src/collections/WorkPool');
-
-var runTests = require('./WorkCommon');
+import runTests from './WorkCommon.js';
 
 runTests('WorkPool', WorkPool);

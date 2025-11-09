@@ -34,7 +34,7 @@ function registerDefaultRenderers(stage) {
       stage.registerRenderer('equirect', 'rectilinear', WebGlEquirect);
       break;
     default:
-      throw new Error(`Unknown stage type: ${stage}`.type);
+      throw new Error(`Unknown stage type: ${stage.type}`);
   }
 }
 

@@ -64,10 +64,10 @@ function autorotate(opts) {
     let currentPitchSpeed = 0;
     let currentFovSpeed = 0;
 
-    var timeDelta;
-    var yawDelta;
-    var pitchDelta;
-    var fovDelta;
+    let timeDelta;
+    let yawDelta;
+    let pitchDelta;
+    let fovDelta;
 
     return function step(params, currentTime) {
       timeDelta = (currentTime - lastTime) / 1000;

@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
+import sinon from 'sinon';
 
-var assert = require('chai').assert;
-var sinon = require('sinon');
-
-var async = require('../../../src/util/async');
+import async from '../../../src/util/async.js';
 
 var error = new Error('err');
 
@@ -30,8 +28,8 @@ function fail() {
   throw error;
 }
 
-suite('async', function () {
-  test('success', function () {
+describe('async', function () {
+  it('success', function () {
     var fn = async(twice.bind(null, 2));
     var spy = sinon.spy();
     fn(spy);
@@ -39,7 +37,7 @@ suite('async', function () {
     assert.isTrue(spy.calledWithExactly(null, 4));
   });
 
-  test('failure', function () {
+  it('failure', function () {
     var fn = async(fail);
     var spy = sinon.spy();
     fn(spy);

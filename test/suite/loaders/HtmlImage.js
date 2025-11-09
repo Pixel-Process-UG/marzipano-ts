@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
-
-var assert = require('chai').assert;
-var HtmlImageLoader = require('../../../src/loaders/HtmlImage');
-var NetworkError = require('../../../src/NetworkError');
+import { assert } from 'chai';
+import HtmlImageLoader from '../../../src/loaders/HtmlImage.js';
+import NetworkError from '../../../src/NetworkError.js';
 
 function createTestImageData(width, height, pixels) {
   var data = [];
@@ -69,24 +67,24 @@ function testLoad(inputImageData, rect, outputImageData, done) {
   });
 }
 
-suite('HtmlImageLoader', function () {
-  test('no rect', function (done) {
+describe('HtmlImageLoader', function () {
+  it('no rect', function (done) {
     testLoad(fullImageData, null, fullImageData, done);
   });
 
-  test('bottom half rect', function (done) {
+  it('bottom half rect', function (done) {
     testLoad(fullImageData, { x: 0, y: 0.5, width: 1, height: 0.5 }, bottomHalfImageData, done);
   });
 
-  test('right half rect', function (done) {
+  it('right half rect', function (done) {
     testLoad(fullImageData, { x: 0.5, y: 0, width: 0.5, height: 1 }, rightHalfImageData, done);
   });
 
-  test('quarter rect', function (done) {
+  it('quarter rect', function (done) {
     testLoad(fullImageData, { x: 0.25, y: 0.25, width: 0.5, height: 0.5 }, quarterImageData, done);
   });
 
-  test('network error', function (done) {
+  it('network error', function (done) {
     var loader = new HtmlImageLoader();
 
     loader.loadImage('http://www.nosuchdomain/bad_image_url.jpg', null, function (err, asset) {

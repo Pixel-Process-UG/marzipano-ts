@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
-
 // Common tests for WorkQueue and WorkPool.
 
-var assert = require('chai').assert;
-var sinon = require('sinon');
-var wait = require('../../wait');
+import { assert } from 'chai';
+import sinon from 'sinon';
+import wait from '../../wait.js';
 
-var defer = require('../../../src/util/defer');
-var cancelize = require('../../../src/util/cancelize');
+import defer from '../../../src/util/defer.js';
+import cancelize from '../../../src/util/cancelize.js';
 
 function returnSync(returnValue) {
   return cancelize(function (done) {
@@ -39,8 +37,8 @@ function returnAsync(returnValue) {
 }
 
 function runTests(name, cls) {
-  suite(name, function () {
-    test('one sync', function (done) {
+  describe(name, function () {
+    it('one sync', function (done) {
       var q = new cls();
       var spy = sinon.spy();
       q.push(returnSync(1), spy);
@@ -50,7 +48,7 @@ function runTests(name, cls) {
       });
     });
 
-    test('one async', function (done) {
+    it('one async', function (done) {
       var q = new cls();
       var spy = sinon.spy();
       q.push(returnAsync(1), spy);
@@ -60,7 +58,7 @@ function runTests(name, cls) {
       });
     });
 
-    test('two sync', function (done) {
+    it('two sync', function (done) {
       var q = new cls();
       var spy1 = sinon.spy();
       var spy2 = sinon.spy();
@@ -73,7 +71,7 @@ function runTests(name, cls) {
       });
     });
 
-    test('two async', function (done) {
+    it('two async', function (done) {
       var q = new cls();
       var spy1 = sinon.spy();
       var spy2 = sinon.spy();
@@ -86,7 +84,7 @@ function runTests(name, cls) {
       });
     });
 
-    test('one sync, one async', function (done) {
+    it('one sync, one async', function (done) {
       var q = new cls();
       var spy1 = sinon.spy();
       var spy2 = sinon.spy();
@@ -99,7 +97,7 @@ function runTests(name, cls) {
       });
     });
 
-    test('one async, one sync', function (done) {
+    it('one async, one sync', function (done) {
       var q = new cls();
       var spy1 = sinon.spy();
       var spy2 = sinon.spy();
@@ -112,7 +110,7 @@ function runTests(name, cls) {
       });
     });
 
-    test('cancel', function (done) {
+    it('cancel', function (done) {
       var q = new cls();
       var spy = sinon.spy();
       var cancel = q.push(returnAsync(1), spy);
@@ -123,7 +121,7 @@ function runTests(name, cls) {
       });
     });
 
-    test('pause and resume', function (done) {
+    it('pause and resume', function (done) {
       var q = new cls();
       var spy = sinon.spy();
       q.pause();

@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
 
-var assert = require('chai').assert;
+import cmp from '../../../src/util/cmp.js';
 
-var cmp = require('../../../src/util/cmp');
-
-suite('cmp', function () {
-  test('less than', function () {
+describe('cmp', function () {
+  it('less than', function () {
     assert.strictEqual(cmp(0, 1), -1);
   });
 
-  test('equal', function () {
+  it('equal', function () {
     assert.strictEqual(cmp(1, 1), 0);
   });
 
-  test('greater than', function () {
+  it('greater than', function () {
     assert.strictEqual(cmp(1, 0), 1);
   });
 });

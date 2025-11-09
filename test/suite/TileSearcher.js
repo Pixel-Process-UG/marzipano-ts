@@ -13,69 +13,67 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
 
-var assert = require('chai').assert;
+import TileSearcher from '../../src/TileSearcher.js';
 
-var TileSearcher = require('../../src/TileSearcher');
+import CubeGeometry from '../../src/geometries/Cube.js';
+const CubeTile = CubeGeometry.Tile;
+import RectilinearView from '../../src/views/Rectilinear.js';
 
-var CubeGeometry = require('../../src/geometries/Cube');
-var CubeTile = CubeGeometry.Tile;
-var RectilinearView = require('../../src/views/Rectilinear');
-
-suite('TileSearcher', function () {
-  test('none visible', function () {
-    var geometry = new CubeGeometry([{ size: 512, tileSize: 512 }]);
-    var startingTile = new CubeTile('f', 0, 0, 0, geometry);
-    var view = new RectilinearView({
+describe('TileSearcher', function () {
+  it('none visible', function () {
+    const geometry = new CubeGeometry([{ size: 512, tileSize: 512 }]);
+    const startingTile = new CubeTile('f', 0, 0, 0, geometry);
+    const view = new RectilinearView({
       yaw: Math.PI,
       fov: Math.PI / 4,
       width: 100,
       height: 100,
     });
-    var result = [];
-    var count = new TileSearcher().search(view, startingTile, result);
+    const result = [];
+    const count = new TileSearcher().search(view, startingTile, result);
     assert.equal(count, 0);
     assert.isEmpty(result);
   });
 
-  test('one visible', function () {
-    var geometry = new CubeGeometry([{ size: 512, tileSize: 512 }]);
-    var startingTile = new CubeTile('b', 0, 0, 0, geometry);
-    var view = new RectilinearView({
+  it('one visible', function () {
+    const geometry = new CubeGeometry([{ size: 512, tileSize: 512 }]);
+    const startingTile = new CubeTile('b', 0, 0, 0, geometry);
+    const view = new RectilinearView({
       yaw: Math.PI,
       fov: Math.PI / 4,
       width: 100,
       height: 100,
     });
-    var result = [];
-    var count = new TileSearcher().search(view, startingTile, result);
+    const result = [];
+    const count = new TileSearcher().search(view, startingTile, result);
     assert.equal(count, 1);
     assert.lengthOf(result, 1);
     assert.isTrue(result[0].equals(startingTile));
   });
 
-  test('many visible', function () {
-    var geometry = new CubeGeometry([{ size: 512, tileSize: 128 }]);
-    var startingTile = new CubeTile('f', 1, 1, 0, geometry);
-    var expectedTiles = [
+  it('many visible', function () {
+    const geometry = new CubeGeometry([{ size: 512, tileSize: 128 }]);
+    const startingTile = new CubeTile('f', 1, 1, 0, geometry);
+    const expectedTiles = [
       new CubeTile('f', 1, 1, 0, geometry),
       new CubeTile('f', 1, 2, 0, geometry),
       new CubeTile('f', 2, 1, 0, geometry),
       new CubeTile('f', 2, 2, 0, geometry),
     ];
-    var view = new RectilinearView({
+    const view = new RectilinearView({
       yaw: 0,
       fov: Math.PI / 6,
       width: 100,
       height: 100,
     });
-    var result = [];
-    var count = new TileSearcher().search(view, startingTile, result);
+    const result = [];
+    const count = new TileSearcher().search(view, startingTile, result);
     assert.equal(count, 4);
-    var seen = 0;
-    for (var i = 0; i < result.length; i++) {
-      for (var j = 0; j < expectedTiles.length; j++) {
+    let seen = 0;
+    for (let i = 0; i < result.length; i++) {
+      for (let j = 0; j < expectedTiles.length; j++) {
         if (result[i].equals(expectedTiles[j])) {
           seen++;
           continue;
@@ -85,43 +83,43 @@ suite('TileSearcher', function () {
     assert.equal(seen, expectedTiles.length);
   });
 
-  test('preserves existing array members', function () {
-    var geometry = new CubeGeometry([{ size: 512, tileSize: 512 }]);
-    var startingTile = new CubeTile('b', 0, 0, 0, geometry);
-    var view = new RectilinearView({
+  it('preserves existing array members', function () {
+    const geometry = new CubeGeometry([{ size: 512, tileSize: 512 }]);
+    const startingTile = new CubeTile('b', 0, 0, 0, geometry);
+    const view = new RectilinearView({
       yaw: Math.PI,
       fov: Math.PI / 4,
       width: 100,
       height: 100,
     });
-    var result = [42];
-    var count = new TileSearcher().search(view, startingTile, result);
+    const result = [42];
+    const count = new TileSearcher().search(view, startingTile, result);
     assert.equal(count, 1);
     assert.lengthOf(result, 2);
     assert.equal(result[0], 42);
     assert.isTrue(result[1].equals(startingTile));
   });
 
-  test('consecutive searches work correctly', function () {
-    var geometry = new CubeGeometry([{ size: 512, tileSize: 512 }]);
-    var startingTile1 = new CubeTile('f', 0, 0, 0, geometry);
-    var view1 = new RectilinearView({
+  it('consecutive searches work correctly', function () {
+    const geometry = new CubeGeometry([{ size: 512, tileSize: 512 }]);
+    const startingTile1 = new CubeTile('f', 0, 0, 0, geometry);
+    const view1 = new RectilinearView({
       yaw: 0,
       fov: Math.PI / 4,
       width: 100,
       height: 100,
     });
-    var startingTile2 = new CubeTile('b', 0, 0, 0, geometry);
-    var view2 = new RectilinearView({
+    const startingTile2 = new CubeTile('b', 0, 0, 0, geometry);
+    const view2 = new RectilinearView({
       yaw: Math.PI,
       fov: Math.PI / 4,
       width: 100,
       height: 100,
     });
-    var searcher = new TileSearcher();
-    var result = [];
-    var count1 = searcher.search(view1, startingTile1, result);
-    var count2 = searcher.search(view2, startingTile2, result);
+    const searcher = new TileSearcher();
+    const result = [];
+    const count1 = searcher.search(view1, startingTile1, result);
+    const count2 = searcher.search(view2, startingTile2, result);
     assert.equal(count1, 1);
     assert.equal(count2, 1);
     assert.lengthOf(result, 2);

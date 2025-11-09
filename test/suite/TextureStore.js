@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
+import sinon from 'sinon';
 
-var assert = require('chai').assert;
-var sinon = require('sinon');
+import eventEmitter from 'minimal-event-emitter';
+import defer from '../../src/util/defer.js';
+import cancelize from '../../src/util/cancelize.js';
 
-var eventEmitter = require('minimal-event-emitter');
-var defer = require('../../src/util/defer');
-var cancelize = require('../../src/util/cancelize');
-
-var TextureStore = require('../../src/TextureStore');
+import TextureStore from '../../src/TextureStore.js';
 
 var nextId = 0;
 
@@ -106,9 +104,9 @@ function makeTextureStore(opts) {
   return new TextureStore(mockSource, mockStage, opts);
 }
 
-suite('TextureStore', function () {
-  suite('visibility', function () {
-    test('mark tile as visible', function () {
+describe('TextureStore', function () {
+  describe('visibility', function () {
+    it('mark tile as visible', function () {
       var store = makeTextureStore();
       var tile = new MockTile();
       assert.isFalse(store.query(tile).visible);
@@ -118,7 +116,7 @@ suite('TextureStore', function () {
       assert.isTrue(store.query(tile).visible);
     });
 
-    test('mark tile as not visible', function () {
+    it('mark tile as not visible', function () {
       var store = makeTextureStore();
       var tile = new MockTile();
       assert.isFalse(store.query(tile).visible);
@@ -131,8 +129,8 @@ suite('TextureStore', function () {
     });
   });
 
-  suite('state machine', function () {
-    test('nested frames', function () {
+  describe('state machine', function () {
+    it('nested frames', function () {
       var store = makeTextureStore();
       var tile = new MockTile();
       assert.isFalse(store.query(tile).visible);
@@ -145,7 +143,7 @@ suite('TextureStore', function () {
       assert.isTrue(store.query(tile).visible);
     });
 
-    test('start frame out of order', function () {
+    it('start frame out of order', function () {
       var store = makeTextureStore();
       var tile = new MockTile();
       store.startFrame();
@@ -162,7 +160,7 @@ suite('TextureStore', function () {
       });
     });
 
-    test('mark tile out of order', function () {
+    it('mark tile out of order', function () {
       var store = makeTextureStore();
       var tile = new MockTile();
       assert.throws(function () {
@@ -180,7 +178,7 @@ suite('TextureStore', function () {
       });
     });
 
-    test('end frame out of order', function () {
+    it('end frame out of order', function () {
       var store = makeTextureStore();
       assert.throws(function () {
         store.endFrame();
@@ -193,8 +191,8 @@ suite('TextureStore', function () {
     });
   });
 
-  suite('textures', function () {
-    test('load texture for static asset', function (done) {
+  describe('textures', function () {
+    it('load texture for static asset', function (done) {
       var store = makeTextureStore();
       var tile = new MockTile();
       store.addEventListener('textureStartLoad', function (eventTile) {
@@ -217,7 +215,7 @@ suite('TextureStore', function () {
       store.endFrame();
     });
 
-    test('load texture for dynamic asset', function (done) {
+    it('load texture for dynamic asset', function (done) {
       var store = makeTextureStore();
       var tile = new MockTile({ dynamicAsset: true });
       store.addEventListener('textureStartLoad', function (eventTile) {
@@ -240,7 +238,7 @@ suite('TextureStore', function () {
       store.endFrame();
     });
 
-    test('retry on loadAsset failure', function (done) {
+    it('retry on loadAsset failure', function (done) {
       var store = makeTextureStore();
       var tile = new MockTile({ assetFailures: 1 }); // will succeed when retried
       store.addEventListener('textureLoad', function (eventTile) {
@@ -257,7 +255,7 @@ suite('TextureStore', function () {
       store.endFrame();
     });
 
-    test('error on createTexture failure', function (done) {
+    it('error on createTexture failure', function (done) {
       var store = makeTextureStore();
       var tile = new MockTile({ textureFailures: 1 });
       store.addEventListener('textureError', function (eventTile) {
@@ -271,7 +269,7 @@ suite('TextureStore', function () {
       store.endFrame();
     });
 
-    test('cancel load', function (done) {
+    it('cancel load', function (done) {
       var store = makeTextureStore();
       var tile = new MockTile();
       store.addEventListener('textureCancel', function (eventTile) {
@@ -287,7 +285,7 @@ suite('TextureStore', function () {
       store.endFrame();
     });
 
-    test('unload texture', function (done) {
+    it('unload texture', function (done) {
       var store = makeTextureStore({
         previouslyVisibleCacheSize: 0,
       });
@@ -307,7 +305,7 @@ suite('TextureStore', function () {
       });
     });
 
-    test('return asset for a tile', function (done) {
+    it('return asset for a tile', function (done) {
       var store = makeTextureStore();
       var tile = new MockTile({ dynamicAsset: true });
       store.startFrame();
@@ -321,7 +319,7 @@ suite('TextureStore', function () {
       });
     });
 
-    test('return texture for a tile', function (done) {
+    it('return texture for a tile', function (done) {
       var store = makeTextureStore();
       var tile = new MockTile();
       store.startFrame();
@@ -335,7 +333,7 @@ suite('TextureStore', function () {
       });
     });
 
-    test('refresh texture for dynamic assets', function (done) {
+    it('refresh texture for dynamic assets', function (done) {
       var store = makeTextureStore();
       var tile = new MockTile({ dynamicAsset: true });
       store.startFrame();
@@ -352,7 +350,7 @@ suite('TextureStore', function () {
       });
     });
 
-    test('do not refresh texture for static assets', function (done) {
+    it('do not refresh texture for static assets', function (done) {
       var store = makeTextureStore();
       var tile = new MockTile();
       store.startFrame();
@@ -368,7 +366,7 @@ suite('TextureStore', function () {
       });
     });
 
-    test('notify on texture invalidation by dynamic asset', function (done) {
+    it('notify on texture invalidation by dynamic asset', function (done) {
       var store = makeTextureStore();
       var tile = new MockTile({ dynamicAsset: true });
       var invalidSpy = sinon.spy();
@@ -387,8 +385,8 @@ suite('TextureStore', function () {
     });
   });
 
-  suite('LRU', function () {
-    test('previously visible tile without a texture is not kept', function () {
+  describe('LRU', function () {
+    it('previously visible tile without a texture is not kept', function () {
       var store = makeTextureStore();
       var tile = new MockTile();
       store.startFrame();
@@ -399,7 +397,7 @@ suite('TextureStore', function () {
       assert.isFalse(store.query(tile).previouslyVisible);
     });
 
-    test('previously visible tile with a texture is kept', function (done) {
+    it('previously visible tile with a texture is kept', function (done) {
       var store = makeTextureStore({
         previouslyVisibleCacheSize: 1,
       });
@@ -415,7 +413,7 @@ suite('TextureStore', function () {
       });
     });
 
-    test('older tile is displaced by newer tile', function (done) {
+    it('older tile is displaced by newer tile', function (done) {
       var store = makeTextureStore({
         previouslyVisibleCacheSize: 1,
       });
@@ -441,8 +439,8 @@ suite('TextureStore', function () {
     });
   });
 
-  suite('pinning', function () {
-    test('pinning is reference-counted', function () {
+  describe('pinning', function () {
+    it('pinning is reference-counted', function () {
       var store = makeTextureStore();
       var tile = new MockTile();
       var i, state;
@@ -464,7 +462,7 @@ suite('TextureStore', function () {
       }
     });
 
-    test('pinning tile causes load', function (done) {
+    it('pinning tile causes load', function (done) {
       var store = makeTextureStore();
       var tile = new MockTile();
       store.addEventListener('textureLoad', function (eventTile) {
@@ -475,7 +473,7 @@ suite('TextureStore', function () {
       store.pin(tile);
     });
 
-    test('unpinning tile causes unload', function (done) {
+    it('unpinning tile causes unload', function (done) {
       var store = makeTextureStore();
       var tile = new MockTile();
       store.pin(tile);
@@ -489,7 +487,7 @@ suite('TextureStore', function () {
       });
     });
 
-    test('pinned tile is not evicted when it becomes invisible', function (done) {
+    it('pinned tile is not evicted when it becomes invisible', function (done) {
       var store = makeTextureStore({
         previouslyVisibleCacheSize: 0,
       });
@@ -503,7 +501,7 @@ suite('TextureStore', function () {
       });
     });
 
-    test('unpinned tile is evicted when it becomes invisible', function (done) {
+    it('unpinned tile is evicted when it becomes invisible', function (done) {
       var store = makeTextureStore({
         previouslyVisibleCacheSize: 0,
       });

@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
+import sinon from 'sinon';
 
-var assert = require('chai').assert;
-var sinon = require('sinon');
+import wait from '../../wait.js';
 
-var wait = require('../../wait');
-
-var ImageUrlSource = require('../../../src/sources/ImageUrl');
+import ImageUrlSource from '../../../src/sources/ImageUrl.js';
 
 function MockStage() {}
 
@@ -35,8 +33,8 @@ MockStage.prototype.loadImage = function (url, rect, done) {
   return function () {};
 };
 
-suite('ImageUrlSource', function () {
-  test('template url', function (done) {
+describe('ImageUrlSource', function () {
+  it('template url', function (done) {
     var source = new ImageUrlSource.fromString('http://localhost/img?f={f}&z={z}&x={x}&y={y}');
 
     var spy = sinon.stub().returns(function () {});
@@ -59,7 +57,7 @@ suite('ImageUrlSource', function () {
     );
   });
 
-  test('template url with preview', function (done) {
+  it('template url with preview', function (done) {
     var defaultOrder = 'bdflru';
 
     var source = new ImageUrlSource.fromString('http://localhost/img?f={f}&z={z}&x={x}&y={y}', {
@@ -91,7 +89,7 @@ suite('ImageUrlSource', function () {
     );
   });
 
-  test('template url with preview in custom order', function (done) {
+  it('template url with preview in custom order', function (done) {
     var customOrder = 'udtblr';
 
     var source = new ImageUrlSource.fromString('http://localhost/img?f={f}&z={z}&x={x}&y={y}', {
@@ -124,7 +122,7 @@ suite('ImageUrlSource', function () {
     );
   });
 
-  test('full rect', function (done) {
+  it('full rect', function (done) {
     var stage = new MockStage();
 
     var tileToUrl = sinon.stub().withArgs('tile').returns({ url: 'url' });
@@ -138,7 +136,7 @@ suite('ImageUrlSource', function () {
     });
   });
 
-  test('partial rect', function (done) {
+  it('partial rect', function (done) {
     var stage = new MockStage();
 
     var tileToUrl = sinon.stub().withArgs('tile').returns({ url: 'url-rect', rect: 'rect' });
@@ -152,7 +150,7 @@ suite('ImageUrlSource', function () {
     });
   });
 
-  test('error', function (done) {
+  it('error', function (done) {
     var stage = new MockStage();
 
     var tileToUrl = sinon.stub().withArgs('tile').returns({ url: 'url-error' });

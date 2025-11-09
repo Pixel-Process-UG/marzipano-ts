@@ -56,8 +56,12 @@ const defaultOptions = {
 let nextId = 0;
 
 // Distinguishes a cancellation from other kinds of errors.
-function CancelError() {}
-inherits(CancelError, Error);
+class CancelError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'CancelError';
+  }
+}
 
 /**
  * @class TextureStoreItem
@@ -315,9 +319,6 @@ class TextureStore {
     this._visibleAgain = [];
     this._evicted = [];
   }
-}
-
-eventEmitter(TextureStore);
 
   /**
    * Destructor.
@@ -639,5 +640,7 @@ eventEmitter(TextureStore);
     };
   }
 }
+
+eventEmitter(TextureStore);
 
 export default TextureStore;

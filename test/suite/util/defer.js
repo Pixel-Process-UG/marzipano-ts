@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
+import sinon from 'sinon';
+import wait from '../../wait.js';
 
-var assert = require('chai').assert;
-var sinon = require('sinon');
-var wait = require('../../wait');
+import defer from '../../../src/util/defer.js';
 
-var defer = require('../../../src/util/defer');
-
-suite('defer', function () {
-  test('without arguments', function (done) {
+describe('defer', function () {
+  it('without arguments', function (done) {
     var spy = sinon.spy();
     defer(spy);
     wait.untilSpyCalled(spy, function () {
@@ -31,7 +29,7 @@ suite('defer', function () {
     });
   });
 
-  test('with arguments', function (done) {
+  it('with arguments', function (done) {
     var spy = sinon.spy();
     defer(spy, [1, 2, 3]);
     wait.untilSpyCalled(spy, function () {

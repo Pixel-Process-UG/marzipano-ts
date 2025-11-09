@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
 
-var assert = require('chai').assert;
+import convertFov from '../../../src/util/convertFov.js';
 
-var convertFov = require('../../../src/util/convertFov');
-
-suite('convertFov', function () {
-  test('htov', function () {
+describe('convertFov', function () {
+  it('htov', function () {
     var htov = convertFov.htov;
 
     var testMatrix = [
@@ -38,7 +36,7 @@ suite('convertFov', function () {
     }
   });
 
-  test('htod', function () {
+  it('htod', function () {
     var htod = convertFov.htod;
 
     var testMatrix = [
@@ -56,7 +54,7 @@ suite('convertFov', function () {
     }
   });
 
-  test('vtoh', function () {
+  it('vtoh', function () {
     var vtoh = convertFov.vtoh;
 
     var testMatrix = [
@@ -74,7 +72,7 @@ suite('convertFov', function () {
     }
   });
 
-  test('vtod', function () {
+  it('vtod', function () {
     var vtod = convertFov.vtod;
 
     var testMatrix = [
@@ -92,7 +90,7 @@ suite('convertFov', function () {
     }
   });
 
-  test('dtoh', function () {
+  it('dtoh', function () {
     var dtoh = convertFov.dtoh;
 
     var testMatrix = [
@@ -110,7 +108,7 @@ suite('convertFov', function () {
     }
   });
 
-  test('dtov', function () {
+  it('dtov', function () {
     var dtov = convertFov.dtov;
 
     var testMatrix = [

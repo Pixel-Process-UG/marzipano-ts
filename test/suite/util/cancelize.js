@@ -13,13 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
+import sinon from 'sinon';
+import wait from '../../wait.js';
 
-var assert = require('chai').assert;
-var sinon = require('sinon');
-var wait = require('../../wait');
-
-var cancelize = require('../../../src/util/cancelize');
+import cancelize from '../../../src/util/cancelize.js';
 
 var error = new Error('err');
 
@@ -32,8 +30,8 @@ function twice(x, done) {
   return noop;
 }
 
-suite('cancelize', function () {
-  test('cancel', function (done) {
+describe('cancelize', function () {
+  it('cancel', function (done) {
     var fn = cancelize(twice);
     var spy = sinon.spy();
     var cancel = fn(2, spy);
@@ -44,7 +42,7 @@ suite('cancelize', function () {
     });
   });
 
-  test('no cancel', function (done) {
+  it('no cancel', function (done) {
     var fn = cancelize(twice);
     var spy = sinon.spy();
     fn(2, spy);

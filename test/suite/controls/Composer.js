@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
 
-var assert = require('chai').assert;
+import ControlComposer from '../../../src/controls/Composer.js';
+import eventEmitter from 'minimal-event-emitter';
 
-var ControlComposer = require('../../../src/controls/Composer');
-var eventEmitter = require('minimal-event-emitter');
-
-suite('ControlComposer', function () {
+describe('ControlComposer', function () {
   function MethodStub() {}
   eventEmitter(MethodStub);
 
@@ -50,7 +48,7 @@ suite('ControlComposer', function () {
     composer.add(method2);
   });
 
-  test('offset', function () {
+  it('offset', function () {
     method.emit('parameterDynamics', 'x', { offset: 0.1 });
 
     var o = composer.offsets();
@@ -59,7 +57,7 @@ suite('ControlComposer', function () {
     assert.isFalse(o.changing);
   });
 
-  test('offsets on multiple parameters', function () {
+  it('offsets on multiple parameters', function () {
     method.emit('parameterDynamics', 'x', { offset: 0.1 });
     method.emit('parameterDynamics', 'y', { offset: 0.2 });
     method.emit('parameterDynamics', 'zoom', { offset: 0.3 });
@@ -76,7 +74,7 @@ suite('ControlComposer', function () {
     assert.isFalse(o.changing);
   });
 
-  test('offset from multiple methods', function () {
+  it('offset from multiple methods', function () {
     method.emit('parameterDynamics', 'x', { offset: 0.1 });
     method2.emit('parameterDynamics', 'x', { offset: 0.25 });
 
@@ -86,7 +84,7 @@ suite('ControlComposer', function () {
     assert.isFalse(o.changing);
   });
 
-  test('offsets on same parameter from single method', function () {
+  it('offsets on same parameter from single method', function () {
     method.emit('parameterDynamics', 'x', { offset: 0.1 });
     method.emit('parameterDynamics', 'x', { offset: 0.25 });
 
@@ -96,7 +94,7 @@ suite('ControlComposer', function () {
     assert.isFalse(o.changing);
   });
 
-  test('equal offsets on same parameter from single method', function () {
+  it('equal offsets on same parameter from single method', function () {
     method.emit('parameterDynamics', 'x', { offset: 0.1 });
     method.emit('parameterDynamics', 'x', { offset: 0.1 });
 
@@ -106,13 +104,13 @@ suite('ControlComposer', function () {
     assert.isFalse(o.changing);
   });
 
-  test('throw with unknown parameter', function () {
+  it('throw with unknown parameter', function () {
     assert.throws(function () {
       method.emit('parameterDynamics', 'wrong', { offset: 0.1 });
     });
   });
 
-  test('velocity', function () {
+  it('velocity', function () {
     method.emit('parameterDynamics', 'x', { velocity: 0.3 });
 
     var o;
@@ -135,7 +133,7 @@ suite('ControlComposer', function () {
     assert.isTrue(o.changing);
   });
 
-  test('offset overrides existing velocity', function () {
+  it('offset overrides existing velocity', function () {
     method.emit('parameterDynamics', 'x', { velocity: 0.3 });
     method.emit('parameterDynamics', 'x', { offset: 0.1 });
 
@@ -148,7 +146,7 @@ suite('ControlComposer', function () {
     assert.isFalse(o.changing);
   });
 
-  test('velocity is added to existing offset', function () {
+  it('velocity is added to existing offset', function () {
     method.emit('parameterDynamics', 'x', { offset: 0.1 });
     advanceClock(100);
     method.emit('parameterDynamics', 'x', { velocity: 0.3 });
@@ -162,7 +160,7 @@ suite('ControlComposer', function () {
     assert.isTrue(o.changing);
   });
 
-  test('velocity after velocity with friction', function () {
+  it('velocity after velocity with friction', function () {
     method.emit('parameterDynamics', 'x', { velocity: 1, friction: 1 });
 
     var o;
@@ -185,7 +183,7 @@ suite('ControlComposer', function () {
     assert.strictEqual(o.offsets.x, 1);
   });
 
-  test('velocity change between compose() calls', function () {
+  it('velocity change between compose() calls', function () {
     composer.offsets();
 
     method.emit('parameterDynamics', 'x', { velocity: 1 });
@@ -201,7 +199,7 @@ suite('ControlComposer', function () {
     assert.strictEqual(o.offsets.x, 1.5);
   });
 
-  test('friction', function () {
+  it('friction', function () {
     method.emit('parameterDynamics', 'x', { velocity: 1, friction: 0.1 });
 
     var o;
@@ -244,7 +242,7 @@ suite('ControlComposer', function () {
     assert.isFalse(o.changing);
   });
 
-  test('friction with negative velocity', function () {
+  it('friction with negative velocity', function () {
     method.emit('parameterDynamics', 'x', { velocity: -1, friction: 0.1 });
 
     var o;
@@ -265,7 +263,7 @@ suite('ControlComposer', function () {
     assert.isTrue(o.changing);
   });
 
-  test('friction after velocity', function () {
+  it('friction after velocity', function () {
     method.emit('parameterDynamics', 'x', { velocity: 1 });
 
     var o;
@@ -282,7 +280,7 @@ suite('ControlComposer', function () {
     assert.closeTo(o.offsets.x, 0.5, 0.00001);
   });
 
-  test('velocity becomes 0 between offset calls', function () {
+  it('velocity becomes 0 between offset calls', function () {
     method.emit('parameterDynamics', 'x', { velocity: 1, friction: 0.1 });
 
     var o;
@@ -305,7 +303,7 @@ suite('ControlComposer', function () {
     assert.isFalse(o.changing);
   });
 
-  test('offset after velocity from other method', function () {
+  it('offset after velocity from other method', function () {
     method.emit('parameterDynamics', 'x', { velocity: -1, friction: 1 });
 
     var o;

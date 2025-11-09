@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
-
 // This file provides utility functions for waiting until certain conditions
 // are true by polling repeatedly. In a test, this is faster and more robust
 // than waiting with setTimeout, as it avoids the need for a large timeout to
@@ -23,7 +21,7 @@
 // until(fn, done) repeatedly calls cond until it returns a truthy value,
 // and then calls done.
 function until(cond, done) {
-  var timer = setInterval(function () {
+  const timer = setInterval(() => {
     if (cond()) {
       clearInterval(timer);
       done();
@@ -33,11 +31,11 @@ function until(cond, done) {
 
 // untilSpyCalled(spy1, ..., spyN, done) repeatedly polls the spies until every
 // one has been called at least once, and then calls done.
-function untilSpyCalled() {
-  var spies = Array.prototype.slice.call(arguments, 0, arguments.length - 1);
-  var done = arguments[arguments.length - 1];
+function untilSpyCalled(...args) {
+  const spies = args.slice(0, args.length - 1);
+  const done = args[args.length - 1];
   function cond() {
-    for (var i = 0; i < spies.length; i++) {
+    for (let i = 0; i < spies.length; i++) {
       if (!spies[i].called) {
         return false;
       }
@@ -47,7 +45,7 @@ function untilSpyCalled() {
   until(cond, done);
 }
 
-module.exports = {
-  until: until,
-  untilSpyCalled: untilSpyCalled,
+export default {
+  until,
+  untilSpyCalled,
 };

@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
 
-var assert = require('chai').assert;
-
-var LruSet = require('../../../src/collections/LruSet');
+import LruSet from '../../../src/collections/LruSet.js';
 
 function Item(element) {
   this._element = element;
@@ -32,9 +30,9 @@ Item.prototype.equals = function (that) {
   return this._element === that._element;
 };
 
-suite('LruSet', function () {
-  suite('add', function () {
-    test('nonexisting element', function () {
+describe('LruSet', function () {
+  describe('add', function () {
+    it('nonexisting element', function () {
       var set = new LruSet(4);
       var element1 = new Item(1);
       var element2 = new Item(1);
@@ -43,7 +41,7 @@ suite('LruSet', function () {
       assert.strictEqual(set.size(), 1);
     });
 
-    test('nonexisting element with same hash as existing element', function () {
+    it('nonexisting element with same hash as existing element', function () {
       var set = new LruSet(4);
       var element1 = new Item(1);
       var element2 = new Item(-1);
@@ -54,7 +52,7 @@ suite('LruSet', function () {
       assert.strictEqual(set.size(), 2);
     });
 
-    test('nonexisting element with different hash than existing element', function () {
+    it('nonexisting element with different hash than existing element', function () {
       var set = new LruSet(4);
       var element1 = new Item(1);
       var element2 = new Item(2);
@@ -65,7 +63,7 @@ suite('LruSet', function () {
       assert.strictEqual(set.size(), 2);
     });
 
-    test('existing element', function () {
+    it('existing element', function () {
       var set = new LruSet(4);
       var element1 = new Item(1);
       var element2 = new Item(1);
@@ -76,7 +74,7 @@ suite('LruSet', function () {
       assert.strictEqual(set.size(), 1);
     });
 
-    test('existing element on a full set', function () {
+    it('existing element on a full set', function () {
       var set = new LruSet(4);
       var elements = [];
       for (var i = 0; i < 8; i++) {
@@ -101,7 +99,7 @@ suite('LruSet', function () {
       assert.strictEqual(set.size(), 4);
     });
 
-    test('nonexisting element on a full set', function () {
+    it('nonexisting element on a full set', function () {
       var set = new LruSet(4);
       var elements = [];
       for (var i = 0; i < 8; i++) {
@@ -125,7 +123,7 @@ suite('LruSet', function () {
       assert.strictEqual(set.size(), 4);
     });
 
-    test('on a set with zero capacity', function () {
+    it('on a set with zero capacity', function () {
       var set = new LruSet(0);
       var element = new Item(1);
       assert.strictEqual(set.add(element), element);
@@ -134,8 +132,8 @@ suite('LruSet', function () {
     });
   });
 
-  suite('remove', function () {
-    test('existing element', function () {
+  describe('remove', function () {
+    it('existing element', function () {
       var set = new LruSet(4);
       var element1 = new Item(1);
       var element2 = new Item(1);
@@ -145,7 +143,7 @@ suite('LruSet', function () {
       assert.strictEqual(set.size(), 0);
     });
 
-    test('nonexisting element', function () {
+    it('nonexisting element', function () {
       var set = new LruSet(4);
       var element1 = new Item(1);
       var element2 = new Item(2);
@@ -155,7 +153,7 @@ suite('LruSet', function () {
       assert.strictEqual(set.size(), 1);
     });
 
-    test('existing element with same hash as existing element', function () {
+    it('existing element with same hash as existing element', function () {
       var set = new LruSet(4);
       var element1 = new Item(1);
       var element2 = new Item(-1);
@@ -167,7 +165,7 @@ suite('LruSet', function () {
       assert.strictEqual(set.size(), 1);
     });
 
-    test('before reaching capacity', function () {
+    it('before reaching capacity', function () {
       var set = new LruSet(4);
       var elements = [];
       for (var i = 0; i < 9; i++) {
@@ -193,7 +191,7 @@ suite('LruSet', function () {
       assert.strictEqual(set.size(), 4);
     });
 
-    test('after reaching capacity', function () {
+    it('after reaching capacity', function () {
       var set = new LruSet(4);
       var elements = [];
       for (var i = 0; i < 9; i++) {
@@ -220,14 +218,14 @@ suite('LruSet', function () {
     });
   });
 
-  suite('has', function () {
-    test('nonexisting element', function () {
+  describe('has', function () {
+    it('nonexisting element', function () {
       var set = new LruSet(4);
       var element = new Item(1);
       assert.isFalse(set.has(element));
     });
 
-    test('nonexisting element with same hash as existing element', function () {
+    it('nonexisting element with same hash as existing element', function () {
       var set = new LruSet(4);
       var element1 = new Item(1);
       var element2 = new Item(-1);
@@ -236,13 +234,13 @@ suite('LruSet', function () {
     });
   });
 
-  suite('size', function () {
-    test('empty', function () {
+  describe('size', function () {
+    it('empty', function () {
       var set = new LruSet(4);
       assert.strictEqual(set.size(), 0);
     });
 
-    test('full', function () {
+    it('full', function () {
       var set = new LruSet(4);
       for (var i = 0; i < 4; i++) {
         set.add(new Item(i));
@@ -251,8 +249,8 @@ suite('LruSet', function () {
     });
   });
 
-  suite('clear', function () {
-    test('clear', function () {
+  describe('clear', function () {
+    it('clear', function () {
       var set = new LruSet(4);
       for (var i = 0; i < 4; i++) {
         set.add(new Item(i));
@@ -265,8 +263,8 @@ suite('LruSet', function () {
     });
   });
 
-  suite('forEach', function () {
-    test('empty', function () {
+  describe('forEach', function () {
+    it('empty', function () {
       var set = new LruSet(16);
       assert.strictEqual(
         set.forEach(function () {
@@ -276,7 +274,7 @@ suite('LruSet', function () {
       );
     });
 
-    test('nonempty', function () {
+    it('nonempty', function () {
       var set = new LruSet(16);
       var elements = [];
       for (var i = 0; i < 10; i++) {

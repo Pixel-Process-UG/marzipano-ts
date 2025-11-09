@@ -13,29 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
 
-var assert = require('chai').assert;
+import calcRect from '../../../src/util/calcRect.js';
 
-var calcRect = require('../../../src/util/calcRect');
-
-suite('calcRect', function () {
-  test('null', function () {
+describe('calcRect', function () {
+  it('null', function () {
     var rect = calcRect(1, 1, null);
     assert.deepEqual(rect, { x: 0, y: 0, width: 1, height: 1 });
   });
 
-  test('relative offset', function () {
+  it('relative offset', function () {
     var rect = calcRect(100, 200, { relativeX: 0.1, relativeY: 0.2 });
     assert.deepEqual(rect, { x: 0.1, y: 0.2, width: 1, height: 1 });
   });
 
-  test('relative size', function () {
+  it('relative size', function () {
     var rect = calcRect(100, 200, { relativeWidth: 0.25, relativeHeight: 0.75 });
     assert.deepEqual(rect, { x: 0, y: 0, width: 0.25, height: 0.75 });
   });
 
-  test('relative offset and size', function () {
+  it('relative offset and size', function () {
     var rect = calcRect(100, 200, {
       relativeX: 0.1,
       relativeY: 0.2,
@@ -45,17 +43,17 @@ suite('calcRect', function () {
     assert.deepEqual(rect, { x: 0.1, y: 0.2, width: 0.25, height: 0.75 });
   });
 
-  test('absolute offset', function () {
+  it('absolute offset', function () {
     var rect = calcRect(100, 200, { absoluteX: 10, absoluteY: 40 });
     assert.deepEqual(rect, { x: 0.1, y: 0.2, width: 1, height: 1 });
   });
 
-  test('absolute size', function () {
+  it('absolute size', function () {
     var rect = calcRect(100, 200, { absoluteWidth: 20, absoluteHeight: 50 });
     assert.deepEqual(rect, { x: 0, y: 0, width: 0.2, height: 0.25 });
   });
 
-  test('absolute offset and size', function () {
+  it('absolute offset and size', function () {
     var rect = calcRect(100, 200, {
       absoluteX: 10,
       absoluteY: 40,
@@ -65,7 +63,7 @@ suite('calcRect', function () {
     assert.deepEqual(rect, { x: 0.1, y: 0.2, width: 0.2, height: 0.25 });
   });
 
-  test('relative offset absolute size', function () {
+  it('relative offset absolute size', function () {
     var rect = calcRect(100, 200, {
       relativeX: 0.1,
       relativeY: 0.2,
@@ -75,7 +73,7 @@ suite('calcRect', function () {
     assert.deepEqual(rect, { x: 0.1, y: 0.2, width: 0.2, height: 0.25 });
   });
 
-  test('absolute offset relative size', function () {
+  it('absolute offset relative size', function () {
     var rect = calcRect(100, 200, {
       absoluteX: 10,
       absoluteY: 40,
@@ -85,7 +83,7 @@ suite('calcRect', function () {
     assert.deepEqual(rect, { x: 0.1, y: 0.2, width: 0.25, height: 0.75 });
   });
 
-  test('absolute overrides relative', function () {
+  it('absolute overrides relative', function () {
     var rect = calcRect(100, 200, {
       absoluteX: 10,
       absoluteY: 40,

@@ -13,17 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-'use strict';
+import { assert } from 'chai';
+import sinon from 'sinon';
 
-var assert = require('chai').assert;
-var sinon = require('sinon');
+import eventEmitter from 'minimal-event-emitter';
 
-var eventEmitter = require('minimal-event-emitter');
+import defer from '../../src/util/defer.js';
+import cancelize from '../../src/util/cancelize.js';
 
-var defer = require('../../src/util/defer');
-var cancelize = require('../../src/util/cancelize');
-
-var RenderLoop = require('../../src/RenderLoop');
+import RenderLoop from '../../src/RenderLoop.js';
 
 function MockStage() {
   this.render = sinon.spy();
@@ -31,7 +29,7 @@ function MockStage() {
 
 eventEmitter(MockStage);
 
-suite('RenderLoop', function () {
+describe('RenderLoop', function () {
   // Replace requestAnimationFrame() and cancelAnimationFrame() with fakes so
   // that the tests still pass when the browser window has no focus. As a side
   // effect, it also makes the tests less flaky since no timeouts are involved.
@@ -75,7 +73,7 @@ suite('RenderLoop', function () {
     window.cancelAnimationFrame = realCancelAnimationFrame;
   });
 
-  test('initial state', function () {
+  it('initial state', function () {
     var stage = new MockStage();
     var loop = new RenderLoop(stage);
     stage.emit('renderInvalid');
@@ -83,7 +81,7 @@ suite('RenderLoop', function () {
     assert.isTrue(stage.render.notCalled);
   });
 
-  test('start', function () {
+  it('start', function () {
     var stage = new MockStage();
     var loop = new RenderLoop(stage);
     loop.start();
@@ -92,7 +90,7 @@ suite('RenderLoop', function () {
     assert.isTrue(stage.render.called);
   });
 
-  test('stop', function () {
+  it('stop', function () {
     var stage = new MockStage();
     var loop = new RenderLoop(stage);
     loop.start();
@@ -102,7 +100,7 @@ suite('RenderLoop', function () {
     assert.isTrue(stage.render.notCalled);
   });
 
-  test('renderOnNextFrame', function () {
+  it('renderOnNextFrame', function () {
     var stage = new MockStage();
     var loop = new RenderLoop(stage);
     loop.start();
