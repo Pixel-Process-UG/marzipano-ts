@@ -1,4 +1,5 @@
 'use client';
+export const dynamic = 'force-dynamic';
 
 import { useEffect, useRef } from 'react';
 import * as Marzipano from 'marzipano';
