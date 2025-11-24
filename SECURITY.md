@@ -11,7 +11,7 @@ We actively maintain and provide security updates for the following versions:
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in Marzipano, please report it responsibly:
+If you discover a security vulnerability in Marzipano-TS, please report it responsibly:
 
 1. **Do NOT** open a public GitHub issue
 2. Email the maintainers at [security contact - please update this]
@@ -30,7 +30,7 @@ If you discover a security vulnerability in Marzipano, please report it responsi
 
 ## Security Best Practices
 
-When using Marzipano:
+When using Marzipano-TS:
 
 1. **Keep dependencies updated**: Regularly update to the latest version
 2. **Sanitize user input**: Always validate and sanitize any user-provided data

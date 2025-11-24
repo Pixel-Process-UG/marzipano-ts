@@ -1,8 +1,7 @@
 CHANGELOG
 
-This file lists notable changes included in each Marzipano release. Please note
-that only library changes are considered; changes to tests, documentation, demos
-or the Marzipano Tool are not tracked.
+This file lists notable changes included in each Marzipano-TS release. Please note
+that only library changes are considered; changes to tests or documentation are not tracked.
 
 Each change is prefixed by one of:
 

@@ -1,7 +1,7 @@
 {
   "name": "marzipano-ts",
   "version": "1.0.0",
-  "description": "A 360° media viewer for the modern web",
+  "description": "Marzipano-TS - A 360° media viewer for the modern web",
   "author": "Google Inc & Pixel & Process UG (haftungsbeschränkt)",
   "license": "Apache-2.0",
   "type": "module",
@@ -15,7 +15,7 @@
       "types": "./dist/types/index.d.ts"
     }
   },
-  "homepage": "http://www.marzipano.net",
+  "homepage": "https://github.com/Pixel-Process-UG/marzipano-ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/Pixel-Process-UG/marzipano-ts.git"

@@ -21,7 +21,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/index.js'),
-      name: 'Marzipano',
+      name: 'MarzipanoTS',
       formats: ['es', 'umd'],
       fileName: (format) => `marzipano.${format}.js`,
     },

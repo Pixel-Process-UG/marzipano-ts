@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Marzipano is a 360° media viewer for the modern web. It's a JavaScript library that uses WebGL to render panoramic images with support for multiple geometries (Cube, Equirect, Flat) and projection types.
+Marzipano-TS is a 360° media viewer for the modern web. It's a JavaScript library that uses WebGL to render panoramic images with support for multiple geometries (Cube, Equirect, Flat) and projection types.
 
 **Key Technologies:**
 - ES6 modules (ESM) with native import/export

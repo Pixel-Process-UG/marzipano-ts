@@ -1,4 +1,4 @@
-// Marzipano - a 360° media viewer for the modern web (vVERSION_STRING)
+// Marzipano-TS - a 360° media viewer for the modern web (vVERSION_STRING)
 //
 // Copyright 2016 Google Inc. All rights reserved.
 //

@@ -1,4 +1,4 @@
-This is the reference for [Marzipano](http://www.marzipano.net/). For a Getting Started guide see [http://www.marzipano.net/docs.html](http://www.marzipano.net/docs.html).
+This is the reference for Marzipano-TS. For usage examples and documentation, see the [README.md](./README.md).
 
 The reference is not yet complete (and also not very pretty). If you have any questions please contact us.
 
@@ -11,7 +11,7 @@ The following viewport code should be used to correctly render in CSS 3D Transfo
 <style>@-ms-viewport { width: device-width; }</style>
 ```
 
-A tour exported by the [Marzipano Tool](http://www.marzipano.net/tool) can be used as a boilerplate for many projects.
+Marzipano-TS provides a comprehensive API for creating immersive 360° experiences.
 
 
 ### Interface elements

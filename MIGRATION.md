@@ -1,10 +1,10 @@
 # Migration Guide
 
-This guide helps you migrate from older versions of Marzipano to the modernized version (1.0.0+).
+This guide helps you migrate from older versions of Marzipano to the modernized version of Marzipano-TS (1.0.0+).
 
 ## Overview of Changes
 
-Marzipano has been modernized to use:
+Marzipano-TS has been modernized to use:
 - **ES6 Modules (ESM)** instead of CommonJS
 - **Modern JavaScript syntax** (ES6+ classes, arrow functions, template literals)
 - **Updated dependencies** (bowser v2, modern dev tools)
@@ -100,7 +100,7 @@ If you have custom test files:
 
 ### 4. Check Browser Compatibility
 
-Marzipano now requires:
+Marzipano-TS now requires:
 - Modern browsers with ES6 module support
 - WebGL support (unchanged)
 - No changes to browser compatibility requirements
@@ -116,7 +116,7 @@ The public API remains unchanged. All existing code should work without modifica
 If you encounter issues during migration:
 1. Check the [issue tracker](https://github.com/google/marzipano/issues)
 2. Visit the [discussion forum](https://groups.google.com/forum/#!forum/marzipano)
-3. Review the [documentation](http://www.marzipano.net/docs.html)
+3. Review the documentation in the [README.md](./README.md) and source code
 
 ## Version History
 

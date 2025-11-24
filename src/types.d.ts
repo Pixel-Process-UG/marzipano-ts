@@ -3,7 +3,7 @@
  * Licensed under the Apache License, Version 2.0
  */
 
-// Core type definitions for Marzipano
+// Core type definitions for Marzipano-TS
 
 // Event emitter types
 export interface EventEmitter {

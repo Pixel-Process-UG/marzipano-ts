@@ -2,7 +2,7 @@ Want to contribute? Great! First, read this page.
 
 ### About this Fork
 
-This project is maintained by [Pixel & Process](https://github.com/Pixel-Process-UG) as a fork of the original Google Marzipano project. We welcome contributions to keep this 360° viewer alive and up-to-date with modern web standards.
+This project is maintained by [Pixel & Process](https://github.com/Pixel-Process-UG) as a fork of the original Google Marzipano project. We welcome contributions to keep Marzipano-TS alive and up-to-date with modern web standards.
 
 ### Before you contribute
 

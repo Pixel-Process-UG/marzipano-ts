@@ -1,4 +1,4 @@
-# Marzipano
+# Marzipano-TS
 
 > **Note:** This project was originally created by Google. [Pixel & Process](https://github.com/Pixel-Process-UG) maintains this fork to keep the project alive and up-to-date with modern web standards.
 
@@ -6,20 +6,13 @@ A 360° media viewer for the modern web.
 
 This is not an official Google product.
 
-Check out our website at http://www.marzipano.net/,
-including the [demos](http://www.marzipano.net/demos.html)
-and the [documentation](http://www.marzipano.net/docs.html).
-
-Please report bugs using the [issue tracker](https://github.com/Pixel-Process-UG/marzipano-ts/issues). If you have any questions, head over to our [discussion forum](https://groups.google.com/forum/#!forum/marzipano).
+Please report bugs using the [issue tracker](https://github.com/Pixel-Process-UG/marzipano-ts/issues).
 
 ### User guide
 
-You can include Marzipano in your project in several ways:
+You can include Marzipano-TS in your project in several ways:
 
-* Obtain the `marzipano.js` file from the latest release at
-  http://www.marzipano.net and copy them into your project.
-
-* Install Marzipano as a dependency using the `npm` package manager:
+* Install Marzipano-TS as a dependency using the `npm` package manager:
   ```bash
   npm install marzipano-ts
   ```
@@ -34,7 +27,7 @@ You can include Marzipano in your project in several ways:
   const { Viewer, Scene, ImageUrlSource, RectilinearView, CubeGeometry } = require('marzipano');
   ```
 
-**Note:** As of version 1.0.0+, Marzipano uses ES6 modules. See [MIGRATION.md](./MIGRATION.md) for migration guidance from older versions.
+**Note:** As of version 1.0.0+, Marzipano-TS uses ES6 modules. See [MIGRATION.md](./MIGRATION.md) for migration guidance from older versions.
 
 ### Developer guide
 
