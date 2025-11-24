@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import * as Marzipano from 'marzipano';
+import type * as Marzipano from 'marzipano';
 
 interface MarzipanoViewerOptions {
   stage?: {
@@ -21,8 +21,8 @@ interface MarzipanoViewerProps {
  * This component handles the lifecycle of a Marzipano Viewer instance,
  * ensuring proper initialization and cleanup.
  */
-export default function MarzipanoViewer({ 
-  className = '', 
+export default function MarzipanoViewer({
+  className = '',
   options,
   onViewerReady
 }: MarzipanoViewerProps) {
@@ -32,15 +32,26 @@ export default function MarzipanoViewer({
   useEffect(() => {
     if (!containerRef.current) return;
 
-    // Create viewer with options
-    const viewer = new Marzipano.Viewer(containerRef.current, options);
-    viewerRef.current = viewer;
+    let mounted = true;
 
-    // Notify parent component
-    onViewerReady(viewer);
+    const initViewer = async () => {
+      const Marzipano = await import('marzipano');
+
+      if (!mounted || !containerRef.current) return;
+
+      // Create viewer with options
+      const viewer = new Marzipano.Viewer(containerRef.current, options);
+      viewerRef.current = viewer;
+
+      // Notify parent component
+      onViewerReady(viewer);
+    };
+
+    initViewer();
 
     // Cleanup function
     return () => {
+      mounted = false;
       if (viewerRef.current) {
         viewerRef.current.destroy();
         viewerRef.current = null;
@@ -49,8 +60,8 @@ export default function MarzipanoViewer({
   }, [onViewerReady, options]);
 
   return (
-    <div 
-      ref={containerRef} 
+    <div
+      ref={containerRef}
       className={className}
       style={{ width: '100%', height: '100%' }}
     />

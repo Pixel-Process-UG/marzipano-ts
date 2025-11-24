@@ -2,24 +2,26 @@
 export const dynamic = 'force-dynamic';
 
 import { useEffect, useRef } from 'react';
-import * as Marzipano from 'marzipano';
+import type * as Marzipano from 'marzipano';
 import DemoLayout from '@/components/DemoLayout';
 import MarzipanoViewer from '@/components/MarzipanoViewer';
 
 export default function EquirectPage() {
   const sceneRef = useRef<Marzipano.Scene | null>(null);
 
-  const handleViewerReady = (viewer: Marzipano.Viewer) => {
+  const handleViewerReady = async (viewer: Marzipano.Viewer) => {
+    const Marzipano = await import('marzipano');
+
     // Create source.
     const source = (Marzipano.ImageUrlSource.fromString as any)(
-      "/media/equirect/angra.jpg"
+      "/demos/hotspot-styles/img/photo.jpg"
     );
 
     // Create geometry.
     const geometry = new Marzipano.EquirectGeometry([{ width: 4000 }]);
 
     // Create view.
-    const limiter = Marzipano.RectilinearView.limit.traditional(1024, 100*Math.PI/180);
+    const limiter = Marzipano.RectilinearView.limit.traditional(1024, 100 * Math.PI / 180);
     const view = new Marzipano.RectilinearView({ yaw: Math.PI }, limiter);
 
     // Create scene.
@@ -37,11 +39,11 @@ export default function EquirectPage() {
   };
 
   return (
-    <DemoLayout 
-      title="Equirectangular" 
+    <DemoLayout
+      title="Equirectangular"
       description="Display an equirectangular image."
     >
-      <MarzipanoViewer 
+      <MarzipanoViewer
         className="w-full h-full"
         onViewerReady={handleViewerReady}
       />
