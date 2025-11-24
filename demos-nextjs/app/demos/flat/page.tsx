@@ -12,7 +12,7 @@ export default function FlatPage() {
     // The tiles were generated with the krpano tools, which indexes the tiles
     // from 1 instead of 0. Hence, we cannot use ImageUrlSource.fromString()
     // and must write a custom function to convert tiles into URLs.
-    const urlPrefix = "//www.marzipano.net/media/lisboa";
+    const urlPrefix = "/media/lisboa";
     const tileUrl = function(z: number, x: number, y: number) {
       return urlPrefix + "/l" + z + "/" + y + "/l" + z + '_' + y + '_' + x + ".jpg";
     };

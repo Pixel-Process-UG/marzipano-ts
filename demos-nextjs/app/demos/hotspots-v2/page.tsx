@@ -29,7 +29,7 @@ export default function HotspotsV2Page() {
 
     // Create scene
     const source = Marzipano.ImageUrlSource.fromString(
-      'https://www.marzipano.net/media/equirect/{z}.jpg'
+      '/media/equirect/{z}.jpg'
     );
     const geometry = new Marzipano.EquirectGeometry([
       { width: 4096 },
