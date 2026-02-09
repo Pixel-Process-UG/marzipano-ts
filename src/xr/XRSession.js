@@ -60,7 +60,7 @@ class XRSessionHandle {
 
       return this;
     } catch (err) {
-      throw new Error(`Failed to initialize XR session: ${err.message}`);
+      throw new Error(`Failed to initialize XR session: ${err.message}`, { cause: err });
     }
   }
 

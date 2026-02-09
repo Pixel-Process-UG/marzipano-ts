@@ -8,11 +8,11 @@
  * @classdesc
  *
  * EXPERIMENTAL Base class for WebGPU renderers.
- * 
+ *
  * **WARNING**: This is an incomplete/placeholder implementation. The render methods
  * are stubs that do not actually render content. This exists as a foundation for
  * future WebGPU renderer development.
- * 
+ *
  * Provides placeholder structure for WebGPU-based geometry rendering.
  */
 class WebGpuBaseRenderer {

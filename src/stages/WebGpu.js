@@ -12,11 +12,11 @@ import { setAbsolute, setFullSize } from '../util/dom.js';
  * @classdesc
  *
  * EXPERIMENTAL WebGPU implementation of Stage.
- * 
+ *
  * **WARNING**: This is an incomplete/placeholder implementation and is NOT production-ready.
  * Most rendering methods are stubs and do not actually render content.
  * This exists only as a foundation for future WebGPU development.
- * 
+ *
  * This experimental backend requires WebGPU support and explicit opt-in via the experimental flag.
  *
  * @param {Object} opts
@@ -76,7 +76,7 @@ class WebGpuStage extends Stage {
       this._initialized = true;
       return this;
     } catch (err) {
-      throw new Error(`Failed to initialize WebGPU: ${err.message}`);
+      throw new Error(`Failed to initialize WebGPU: ${err.message}`, { cause: err });
     }
   }
 

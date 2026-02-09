@@ -1,13 +1,6 @@
 import { defineConfig } from 'vitest/config';
-import { nodePolyfills } from 'vite-plugin-node-polyfills';
 
 export default defineConfig({
-  plugins: [
-    nodePolyfills({
-      include: ['buffer', 'process', 'util'],
-    }),
-  ],
-
   test: {
     // Test environment
     environment: 'jsdom',
@@ -19,15 +12,12 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html', 'lcov'],
+      include: ['src/**/*.js'],
       exclude: [
-        'node_modules/',
-        'test/',
-        'dist/',
-        'build/',
-        'demos/',
-        '**/*.config.js',
+        'src/jsdoc-extras.js',
+        'src/preamble.js',
       ],
-      threshold: {
+      thresholds: {
         lines: 70,
         functions: 70,
         branches: 70,
@@ -53,12 +43,6 @@ export default defineConfig({
     // This allows us to use describe/it/before/after etc.
     api: {
       port: 7357,
-    },
-
-    // Browser mode for DOM testing
-    browser: {
-      enabled: false, // Can be enabled for browser-specific tests
-      name: 'chrome',
     },
 
     // Reporter

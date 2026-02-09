@@ -1,15 +1,6 @@
 import { defineConfig } from 'vite';
-import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import path from 'path';
 
 export default defineConfig({
-  plugins: [
-    nodePolyfills({
-      // Required for some legacy code patterns
-      include: ['buffer', 'process', 'util'],
-    }),
-  ],
-
   // Development server configuration
   server: {
     port: 8080,
@@ -20,7 +11,7 @@ export default defineConfig({
   // Build configuration for library
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'src/index.js'),
+      entry: import.meta.dirname + '/src/index.js',
       name: 'MarzipanoTS',
       formats: ['es', 'umd'],
       fileName: (format) => `marzipano.${format}.js`,
