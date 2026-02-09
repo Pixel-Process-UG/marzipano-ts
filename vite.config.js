@@ -1,4 +1,10 @@
 import { defineConfig } from 'vite';
+import { readFileSync } from 'fs';
+
+const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
+const banner = `// Marzipano-TS - a 360° media viewer for the modern web (v${pkg.version})
+// Copyright 2016 Google Inc. All rights reserved.
+// Licensed under the Apache License, Version 2.0`;
 
 export default defineConfig({
   // Development server configuration
@@ -25,6 +31,8 @@ export default defineConfig({
         globals: {},
         // Preserve the original export structure
         exports: 'named',
+        // Version banner
+        banner,
       },
     },
     sourcemap: true,
@@ -32,6 +40,9 @@ export default defineConfig({
     terserOptions: {
       compress: {
         drop_console: false,
+      },
+      format: {
+        preamble: banner,
       },
     },
   },
