@@ -4,6 +4,9 @@
   "description": "Marzipano-TS - A 360° media viewer for the modern web",
   "author": "Google Inc & Pixel & Process UG (haftungsbeschränkt)",
   "license": "Apache-2.0",
+  "engines": {
+    "node": ">=20"
+  },
   "type": "module",
   "main": "src/index.js",
   "module": "src/index.js",
